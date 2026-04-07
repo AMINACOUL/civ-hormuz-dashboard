@@ -451,6 +451,12 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
           <td style="padding:6px 4px;text-align:center;color:#f59e0b">↑ +2.4%</td>
           <td style="padding:6px 4px;text-align:center;color:var(--text3)">132</td>
         </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+          <td style="padding:6px 4px;color:var(--text2)">IHPC CIV (ANStat)</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#10b981" id="wl-ihpc">+1.9%</td>
+          <td style="padding:6px 4px;text-align:center;color:#10b981">↑ (haussier)</td>
+          <td style="padding:6px 4px;text-align:center;color:#f59e0b">3% UEMOA</td>
+        </tr>
         <tr>
           <td style="padding:6px 4px;color:var(--text2)">Déficit courant (% PIB)</td>
           <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#f59e0b">–2.3%</td>
@@ -651,6 +657,128 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
     </div>
   </div>
 
+
+  <!-- ANStat OFFICIAL DATA SECTION -->
+  <div style="margin:14px 0">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);border-radius:5px;padding:4px 12px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#f97316">
+          🏛️ Données officielles — ANStat Côte d'Ivoire
+        </div>
+        <span id="anstatLiveBadge" style="background:rgba(100,100,100,.15);color:var(--text3);border:1px solid var(--border);padding:3px 8px;border-radius:3px;font-size:10px;font-weight:700">● SEED</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <a href="https://anstat.ci" target="_blank" style="font-size:10px;color:var(--blue);text-decoration:none">↗ anstat.ci</a>
+        <button onclick="fetchAnstatData()" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:4px 10px;border-radius:4px;font-size:10px;cursor:pointer">↻ Actualiser</button>
+      </div>
+    </div>
+
+    <!-- ANStat tiles grid -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">
+
+      <!-- IHPC Inflation -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #10b981;border-radius:8px;padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:6px">IHPC — Inflation glissement annuel</div>
+        <div style="font-size:26px;font-weight:700;font-family:var(--mono);color:#10b981" id="anstatIhpc">+1.9%</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:4px">Fév. 2026 · ANStat CIV</div>
+        <div style="font-size:10px;color:#10b981;margin-top:3px">✅ Sous seuil UEMOA 3%</div>
+        <div style="margin-top:8px;font-size:9px;color:var(--text3);border-top:1px solid var(--border);padding-top:6px">
+          ⚠ Choc Hormuz : risque dépassement 3–5% H2 2026
+        </div>
+      </div>
+
+      <!-- Inflation moy. annuelle -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #10b981;border-radius:8px;padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:6px">Inflation moy. annuelle (UEMOA)</div>
+        <div style="font-size:26px;font-weight:700;font-family:var(--mono);color:#10b981" id="anstatInflMoy">+0.2%</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:4px">Fév. 2026 · ANStat CIV</div>
+        <div style="font-size:10px;color:#10b981;margin-top:3px">Très faible — pré-choc</div>
+        <div style="margin-top:8px;font-size:9px;color:var(--text3);border-top:1px solid var(--border);padding-top:6px">
+          MoM Fév. 2026 : +0.3%
+        </div>
+      </div>
+
+      <!-- Croissance PIB -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #10b981;border-radius:8px;padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:6px">Croissance PIB réel</div>
+        <div style="font-size:26px;font-weight:700;font-family:var(--mono);color:#10b981" id="anstatPib">+6.0%</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:4px">2024 · ANStat / Trésor FR</div>
+        <div style="font-size:10px;color:#10b981;margin-top:3px">+2pp au-dessus ASS moy.</div>
+        <div style="margin-top:8px;font-size:9px;color:var(--text3);border-top:1px solid var(--border);padding-top:6px">
+          2025p : 6.5% · 2023 : 6.5%
+        </div>
+      </div>
+
+      <!-- Production industrielle -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #3b82f6;border-radius:8px;padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:6px">Production industrielle (IPI)</div>
+        <div style="font-size:26px;font-weight:700;font-family:var(--mono);color:#3b82f6" id="anstatIpi">+7.3%</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:4px">Nov. 2025 · ANStat CIV</div>
+        <div style="font-size:10px;color:#3b82f6;margin-top:3px">Glissement annuel</div>
+        <div style="margin-top:8px;font-size:9px;color:var(--text3);border-top:1px solid var(--border);padding-top:6px">
+          Oct. 2025 : +5.4% · Secteur secondaire dynamique
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+
+      <!-- Population -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #8b5cf6;border-radius:8px;padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:6px">Population (2026)</div>
+        <div style="font-size:22px;font-weight:700;font-family:var(--mono);color:#8b5cf6">33.5M</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:4px">Worldometer / ONU · ANStat 2025</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:3px">Densité : 100.8 hbts/km²</div>
+        <div style="margin-top:8px;font-size:9px;color:var(--text3);border-top:1px solid var(--border);padding-top:6px">
+          52.5% urbain · 47.5% rural · Âge médian 18.5 ans
+        </div>
+      </div>
+
+      <!-- Recettes fiscales -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #f59e0b;border-radius:8px;padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:6px">Recettes fiscales / PIB</div>
+        <div style="font-size:22px;font-weight:700;font-family:var(--mono);color:#f59e0b">14.4%</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:4px">2024 · Trésor FR / MFB</div>
+        <div style="font-size:10px;color:#ef4444;margin-top:3px">Cible FMI 2026 : 15.9%</div>
+        <div style="margin-top:8px;font-size:9px;color:var(--text3);border-top:1px solid var(--border);padding-top:6px">
+          Seuil UEMOA : 20% · Écart : –5.6pp
+        </div>
+      </div>
+
+      <!-- Déficit budgétaire -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #f59e0b;border-radius:8px;padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:6px">Déficit budgétaire</div>
+        <div style="font-size:22px;font-weight:700;font-family:var(--mono);color:#f59e0b">–4.0%</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:4px">2024 · PIB · Trésor FR</div>
+        <div style="font-size:10px;color:#f59e0b;margin-top:3px">Cible 2026 : 3.6%</div>
+        <div style="margin-top:8px;font-size:9px;color:var(--text3);border-top:1px solid var(--border);padding-top:6px">
+          2023 : –5.2% · Consolidation en cours
+        </div>
+      </div>
+
+      <!-- EHCVM + RGPH -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #6b7280;border-radius:8px;padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:6px">Enquêtes ANStat en cours</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text2)">EHCVM<br>2025–2026</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:4px">Pauvreté & inégalités · Résultats déc. 2026</div>
+        <div style="margin-top:8px;font-size:9px;color:var(--text3);border-top:1px solid var(--border);padding-top:6px">
+          RGPH 2021 · MICS 2026 · EMI 2025
+          <a href="https://rp2021.anstat.ci" target="_blank" style="color:var(--blue);margin-left:4px">↗ rp2021.anstat.ci</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANSTAT INFLATION PRE vs POST SHOCK INSIGHT -->
+    <div style="margin-top:10px;background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.2);border-left:3px solid #f97316;border-radius:0 8px 8px 0;padding:12px 16px;font-size:12px;color:var(--text2);line-height:1.7">
+      <strong style="color:#f97316">💡 Analyse clé ANStat — Inflation avant et après le choc Hormuz :</strong>
+      Avant le choc (fév. 2026), l'inflation ivoirienne était à <strong style="color:#10b981">+0.2% en moyenne annuelle</strong> —
+      l'une des plus basses de l'UEMOA, sous le seuil de convergence communautaire de 3%.
+      Le choc Hormuz (Brent +55% depuis fév.) menace ce bilan : les prix de l'énergie et du transport
+      pourraient pousser l'IHPC vers <strong style="color:#ef4444">3–5% en H2 2026</strong>,
+      au-dessus du seuil UEMOA, avec des implications pour la politique monétaire de la <strong>BCEAO</strong>
+      et le programme FMI. <em>Prochain IHPC ANStat attendu : mars 2026 (env. 4 avr. 2026)</em>.
+    </div>
+  </div>
   <!-- TIMELINE -->
   <div style="margin-top:16px">
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px">📋 Chronologie des événements clés</div>
@@ -1272,6 +1400,19 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
 
 <script>
 // ── DATA SEED (avril 2026) ──────────────────────────────────────
+// ANStat CIV seed data — sources officielles
+const ANSTAT_SEED = {
+  ihpc_glissement: 1.9,    // Fév. 2026 · ANStat
+  ihpc_moy_annuelle: 0.2,  // Fév. 2026 · ANStat
+  ihpc_mom: 0.3,           // Fév. 2026 · ANStat
+  pib_croissance: 6.0,     // 2024 · Trésor FR
+  ipi_croissance: 7.3,     // Nov. 2025 · ANStat
+  recettes_pib: 14.4,      // 2024 · MFB
+  deficit_pib: 4.0,        // 2024 · MFB
+  population: 33.5,        // 2026 · Worldometer/ONU
+  seuil_uemoa: 3.0,        // Critère convergence UEMOA
+};
+
 const SEED = {
   brent: 109.03, wti: 111.54, transits: 5,
   fao: 128.5, riz: 346, uree: 700,
@@ -1703,6 +1844,72 @@ function updateCompositeScore(brent) {
 
 // Init simulator and score
 updateSimulator(SEED.brent || 109);
+
+// ── ANStat CIV — API fetch attempt ───────────────────────────────
+// ANStat publishes monthly IHPC — try to fetch latest from their public API
+// Endpoints observed: anstat.ci/indicateur-details/...
+// Also try allorigins CORS proxy as fallback
+async function fetchAnstatData() {
+  const badge = document.getElementById("anstatLiveBadge");
+  if (badge) { badge.textContent = "↻ Chargement..."; badge.style.color = "#f59e0b"; }
+
+  try {
+    // Try ANStat JSON endpoint for IHPC (inflation indicator)
+    const url = "https://api.allorigins.win/get?url=" + encodeURIComponent("https://anstat.ci/api/v1/indicators/ihpc/latest");
+    const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (r.ok) {
+      const j = await r.json();
+      if (j.contents) {
+        const data = JSON.parse(j.contents);
+        if (data.value) {
+          updateAnstatKPIs({ ihpc: data.value, period: data.period });
+          if (badge) { badge.textContent = "● LIVE"; badge.style.color = "#10b981"; }
+          return;
+        }
+      }
+    }
+  } catch(e) {}
+
+  // Fallback: scrape ANStat homepage for latest IHPC headline
+  try {
+    const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent("https://anstat.ci/");
+    const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
+    if (r.ok) {
+      const j = await r.json();
+      const text = j.contents || "";
+      // Parse IHPC value from page — ANStat shows e.g. "hausse de 1,9%"
+      const m = text.match(/(?:hausse|baisse|progression)\s+de\s+[+\-]?\s*([0-9,]+)\s*%/i);
+      if (m) {
+        const val = parseFloat(m[1].replace(",","."));
+        updateAnstatKPIs({ ihpc: val });
+        if (badge) { badge.textContent = "● LIVE scrape"; badge.style.color = "#2ec4b6"; }
+        return;
+      }
+    }
+  } catch(e) {}
+
+  // All sources failed — keep seed data
+  if (badge) { badge.textContent = "● SEED · anstat.ci"; badge.style.color = "var(--text3)"; }
+  console.log("[ANStat] Using seed data — API not reachable from browser (CORS)");
+}
+
+function updateAnstatKPIs(data) {
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  if (data.ihpc !== undefined) {
+    const sign = data.ihpc >= 0 ? "+" : "";
+    set("anstatIhpc", sign + data.ihpc.toFixed(1) + "%");
+    const color = Math.abs(data.ihpc) < 3 ? "#10b981" : "#ef4444";
+    const el = document.getElementById("anstatIhpc");
+    if (el) el.style.color = color;
+  }
+  if (data.period) {
+    const el = document.getElementById("anstatIhpc");
+    if (el) el.nextElementSibling.textContent = data.period + " · ANStat CIV";
+  }
+}
+
+// Auto-attempt on load (silent fail)
+setTimeout(fetchAnstatData, 3000);
 
 </script>
 </body>
