@@ -206,6 +206,263 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
   <div class="tab" onclick="switchTab('sources')">Sources &amp; Méthode</div>
 </div>
 
+<!-- ═══ PANEL : DÉCIDEUR ═══ -->
+<div class="panel" id="panel-decideur">
+
+  <!-- HEADLINE SCORE -->
+  <div style="background:linear-gradient(135deg,#0e1d2c,#0f2a1a);border:1px solid rgba(249,115,22,.3);border-radius:10px;padding:18px 24px;margin-bottom:14px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text3)">Score de vulnérabilité composite — CIV</div>
+      <div style="display:flex;align-items:baseline;gap:10px;margin-top:4px">
+        <span id="scoreComposite" style="font-size:48px;font-weight:900;font-family:var(--mono);color:#f97316">67</span>
+        <span style="font-size:13px;color:var(--text3)">/100</span>
+        <span id="scoreBadge" style="background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3);padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700">🟡 VIGILANCE ÉLEVÉE</span>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px">Calculé à partir de 6 piliers · mis à jour automatiquement · <span id="scoreDate"></span></div>
+    </div>
+    <div style="margin-left:auto;text-align:right">
+      <div style="font-size:10px;color:var(--text3);margin-bottom:6px">Révision WEO FMI</div>
+      <div style="font-size:22px;font-weight:700;color:#ef4444;font-family:var(--mono)" id="weoCountdown">—</div>
+      <div style="font-size:10px;color:var(--text3)">14 avr. 2026 · 1ʳᵉ révision post-choc</div>
+    </div>
+  </div>
+
+  <!-- WHAT-IF BRENT SLIDER -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--text)">⚡ Simulateur "Et si…" — Prix du Brent</div>
+        <div style="font-size:11px;color:var(--text3)">Faites glisser pour simuler l'impact fiscal et social en temps réel</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:28px;font-weight:700;color:#f97316;font-family:var(--mono)" id="sliderBrentVal">$109</div>
+        <div style="font-size:10px;color:var(--text3)">/bbl · Brent</div>
+      </div>
+    </div>
+    <input type="range" id="brentSlider" min="60" max="150" value="109" step="1"
+      style="width:100%;accent-color:#f97316;height:6px;cursor:pointer"
+      oninput="updateSimulator(this.value)">
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px">
+      <span>$60 — Résolution Hormuz</span>
+      <span>$75 — Scén. A</span>
+      <span style="color:#f59e0b">$109 — Actuel</span>
+      <span style="color:#ef4444">$130+ — Extrême</span>
+      <span>$150</span>
+    </div>
+    <!-- Simulator output tiles -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px">
+      <div style="background:var(--bg3);border-radius:8px;padding:12px;text-align:center;border-top:2px solid var(--border)">
+        <div style="font-size:9px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Super pompe<br>prix équitable</div>
+        <div id="simSuper" style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--text)">875</div>
+        <div style="font-size:9px;color:var(--text3)">FCFA/L</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px;text-align:center;border-top:2px solid var(--border)">
+        <div style="font-size:9px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Subvention<br>implicite</div>
+        <div id="simSubv" style="font-size:18px;font-weight:700;font-family:var(--mono);color:#f59e0b">+55</div>
+        <div style="font-size:9px;color:var(--text3)">FCFA/L</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px;text-align:center;border-top:2px solid var(--border)">
+        <div style="font-size:9px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Coût fiscal<br>mensuel</div>
+        <div id="simCout" style="font-size:18px;font-weight:700;font-family:var(--mono);color:#f59e0b">~50</div>
+        <div style="font-size:9px;color:var(--text3)">Mds FCFA/mois</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px;text-align:center;border-top:2px solid var(--border)">
+        <div style="font-size:9px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">% PIB<br>annualisé</div>
+        <div id="simPIB" style="font-size:18px;font-weight:700;font-family:var(--mono);color:#f59e0b">0.7</div>
+        <div style="font-size:9px;color:var(--text3)">% PIB/an</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px;text-align:center;border-top:2px solid var(--border)">
+        <div style="font-size:9px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Scénario<br>fiscal</div>
+        <div id="simScen" style="font-size:14px;font-weight:700;color:#f59e0b">B — Statu quo</div>
+        <div id="simAlert" style="font-size:9px;color:var(--text3)">Gel tenable</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION PRIORITY CARDS -->
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px">🎯 Actions prioritaires pour les décideurs</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+
+    <div class="action-card" data-priority="URGENT" style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.3);border-left:4px solid #ef4444;border-radius:8px;padding:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="background:#ef4444;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.06em">🚨 URGENT — 0–30 jours</span>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">Chiffrer le coût réel du gel des prix</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.7">
+        ① Obtenir volumes consommation réelle DGH/PETROCI/SIR<br>
+        ② Calculer subvention implicite exacte (PMC vs prix marché)<br>
+        ③ Évaluer impact sur recettes fiscales budgétisées (711 Mds FCFA)<br>
+        ④ Préparer note MFB avant révision WEO FMI (14 avr.)
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#ef4444">→ Responsable : DGH + Direction Budget MFB</div>
+    </div>
+
+    <div class="action-card" data-priority="URGENT" style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.3);border-left:4px solid #ef4444;border-radius:8px;padding:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="background:#ef4444;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.06em">🚨 URGENT — 0–30 jours</span>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">Plan d'urgence filière cacao</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.7">
+        ① Évaluer stocks bloqués Abidjan + San Pedro + coopératives<br>
+        ② Mesures d'urgence : facilités de crédit coopératives (BCEAO)<br>
+        ③ Réduire coût intrants engrais pour maintenir rendements H2<br>
+        ④ Mécanisme de soutien planteurs (transferts ciblés)
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#ef4444">→ Responsable : Conseil Café-Cacao + Min. Agriculture</div>
+    </div>
+
+    <div class="action-card" data-priority="COURT_TERME" style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);border-left:4px solid #f59e0b;border-radius:8px;padding:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="background:#f59e0b;color:#000;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.06em">⚠ COURT TERME — 1–3 mois</span>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">Contingence : révision progressive des prix carburant</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.7">
+        ① Préparer scénario de sortie du gel si Brent > $120 durablement<br>
+        ② Cibler la protection sur ménages pauvres (lampant, 6 kg butane)<br>
+        ③ Communication sociale anticipée (transporteurs, entreprises)<br>
+        ④ Synchroniser avec programme FMI — éviter biais déficit >4%
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#f59e0b">→ Responsable : MFB + Min. Pétrole + BCEAO</div>
+    </div>
+
+    <div class="action-card" data-priority="COURT_TERME" style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);border-left:4px solid #f59e0b;border-radius:8px;padding:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="background:#f59e0b;color:#000;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.06em">⚠ COURT TERME — 1–3 mois</span>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">Sécuriser les approvisionnements alternatifs</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.7">
+        ① Identifier sources non-Golfe pour brut SIR (Nigeria, Angola, Méditerranée)<br>
+        ② Négocier stocks stratégiques + buffer PETROCI (+2 mois)<br>
+        ③ Contrats engrais alternatifs (hors Golfe) pour saison petite traite<br>
+        ④ Rejoindre cadre IEA/BAD de coordination régionale approvisionnement
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#f59e0b">→ Responsable : Min. Pétrole + PETROCI + Min. Agriculture</div>
+    </div>
+
+    <div class="action-card" data-priority="MOYEN_TERME" style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-left:4px solid #3b82f6;border-radius:8px;padding:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="background:#3b82f6;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.06em">📋 MOYEN TERME — 3–12 mois</span>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">Transformer la crise en levier de réforme</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.7">
+        ① Accélérer transformation locale cacao (objectif 50% d'ici 2030)<br>
+        ② Réforme mécanisme PMC → ciblage ménages vulnérables<br>
+        ③ Diversification énergétique : solaire, hydro, gaz offshore CIV<br>
+        ④ Utiliser le hub Abidjan–San Pedro comme levier CEDEAO (AfCFTA)
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#3b82f6">→ Responsable : Présidence + MFB + Min. Pétrole + CCC</div>
+    </div>
+
+    <div class="action-card" data-priority="MOYEN_TERME" style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-left:4px solid #3b82f6;border-radius:8px;padding:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="background:#3b82f6;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.06em">📋 MOYEN TERME — 3–12 mois</span>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">Gestion du risque FMI — ratio dette/recettes</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.7">
+        ① Service dette/recettes = 17.7% → seuil 18% : marge de 0.3pp seulement<br>
+        ② Identifier 100–150 Mds FCFA recettes additionnelles (fiscalité + formalisation)<br>
+        ③ Utiliser programme FMI $4.8Mds comme garantie marchés souverains<br>
+        ④ Préparer communication WEO 14 avr. 2026 avant publication
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#3b82f6">→ Responsable : MFB + BCEAO + Ambassade FMI Abidjan</div>
+    </div>
+  </div>
+
+  <!-- KEY DATES + WATCHLIST -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px">
+      <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:10px">📅 Échéances critiques</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(239,68,68,.08);border-radius:6px;border-left:3px solid #ef4444">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#ef4444">Ultimatum Trump Iran (Hormuz)</div>
+            <div style="font-size:10px;color:var(--text3)">Résolution ou escalade → impact direct prix</div>
+          </div>
+          <div id="cdApril6" style="font-size:13px;font-weight:700;font-family:var(--mono);color:#ef4444;white-space:nowrap">6 avr.</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(249,115,22,.07);border-radius:6px;border-left:3px solid #f97316">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#f97316">Révision WEO FMI — CIV incluse</div>
+            <div style="font-size:10px;color:var(--text3)">1ʳᵉ révision officielle post-choc → notation CIV</div>
+          </div>
+          <div id="cdApril14" style="font-size:13px;font-weight:700;font-family:var(--mono);color:#f97316;white-space:nowrap">14 avr.</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(245,158,11,.07);border-radius:6px;border-left:3px solid #f59e0b">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#f59e0b">Fiscal Monitor FMI</div>
+            <div style="font-size:10px;color:var(--text3)">Trajectoire dette Afrique → impact programme FMI CIV</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;font-family:var(--mono);color:#f59e0b;white-space:nowrap">15 avr.</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(59,130,246,.07);border-radius:6px;border-left:3px solid #3b82f6">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#3b82f6">Prochain ajustement DGH carburants</div>
+            <div style="font-size:10px;color:var(--text3)">Décision maintien ou révision prix pompe — mai 2026</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;font-family:var(--mono);color:#3b82f6;white-space:nowrap">1 mai</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(16,185,129,.07);border-radius:6px;border-left:3px solid #10b981">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#10b981">Saison petite traite cacao</div>
+            <div style="font-size:10px;color:var(--text3)">Application engrais critique → rendements H2 2026</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;font-family:var(--mono);color:#10b981;white-space:nowrap">Mai–Juin</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px">
+      <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:10px">🔭 Indicateurs à surveiller (watchlist)</div>
+      <table style="width:100%;font-size:11px;border-collapse:collapse">
+        <tr style="border-bottom:1px solid var(--border)">
+          <th style="text-align:left;padding:5px 4px;color:var(--text3);font-size:9px;text-transform:uppercase">Indicateur</th>
+          <th style="text-align:center;padding:5px 4px;color:var(--text3);font-size:9px;text-transform:uppercase">Valeur</th>
+          <th style="text-align:center;padding:5px 4px;color:var(--text3);font-size:9px;text-transform:uppercase">Tendance</th>
+          <th style="text-align:center;padding:5px 4px;color:var(--text3);font-size:9px;text-transform:uppercase">Seuil alert.</th>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+          <td style="padding:6px 4px;color:var(--text2)">Brent ($/bbl)</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444" id="wl-brent">$109</td>
+          <td style="padding:6px 4px;text-align:center;color:#ef4444">↑ +58%</td>
+          <td style="padding:6px 4px;text-align:center;color:var(--text3)">$120</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+          <td style="padding:6px 4px;color:var(--text2)">Service dette/recettes</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444">17.7%</td>
+          <td style="padding:6px 4px;text-align:center;color:#ef4444">↑ proche seuil</td>
+          <td style="padding:6px 4px;text-align:center;color:#ef4444;font-weight:600">18% ⚠</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+          <td style="padding:6px 4px;color:var(--text2)">Prix cacao mondial</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444">$4 200/t</td>
+          <td style="padding:6px 4px;text-align:center;color:#ef4444">↓ –65%</td>
+          <td style="padding:6px 4px;text-align:center;color:var(--text3)">$5 000</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+          <td style="padding:6px 4px;color:var(--text2)">Urée ($/MT)</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444">$700</td>
+          <td style="padding:6px 4px;text-align:center;color:#ef4444">↑ +46% MoM</td>
+          <td style="padding:6px 4px;text-align:center;color:var(--text3)">$500</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+          <td style="padding:6px 4px;color:var(--text2)">FAO Food Price Index</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#f59e0b">128.5</td>
+          <td style="padding:6px 4px;text-align:center;color:#f59e0b">↑ +2.4%</td>
+          <td style="padding:6px 4px;text-align:center;color:var(--text3)">132</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 4px;color:var(--text2)">Déficit courant (% PIB)</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#f59e0b">–2.3%</td>
+          <td style="padding:6px 4px;text-align:center;color:#f59e0b">↓ se creuse</td>
+          <td style="padding:6px 4px;text-align:center;color:var(--text3)">–4%</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
 <!-- ═══ PANEL : VUE D'ENSEMBLE ═══ -->
 <div class="panel active" id="panel-apercu">
 
@@ -1075,10 +1332,10 @@ function renderEcowasCharts() {
 }
 
 function switchTab(id) {
-  const tabMap = {apercu:0, energie:1, agriculture:2, fiscal:3, social:4, ecowas:5, sources:6};
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i === (tabMap[id]??0)));
+  const tabMap = {decideur:0, apercu:1, energie:2, agriculture:3, fiscal:4, social:5, ecowas:6, sources:7};
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i === (tabMap[id]??1)));
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + id));
-  setTimeout(renderCharts, 50); if(id==='ecowas') setTimeout(renderEcowasCharts, 100);
+  setTimeout(renderCharts, 50); if(id==='ecowas') setTimeout(renderEcowasCharts, 100); if(id==='decideur') updateSimulator(document.getElementById('brentSlider')?.value || SEED.brent);
 }
 
 // ── DATE & DAY COUNTER ───────────────────────────────────────────
@@ -1345,6 +1602,108 @@ async function refreshData() {
 
 // Init
 setTimeout(renderCharts, 200);
+// ── SIMULATOR — what-if Brent slider ──────────────────────────────
+function updateSimulator(brent) {
+  brent = parseFloat(brent);
+  document.getElementById('sliderBrentVal').textContent = '$' + brent;
+
+  // MOPS-based landed cost estimate: 0.077 + 0.0102*Brent + 0.10 freight
+  const mops = 0.077 + 0.0102 * brent;
+  const landed = mops + 0.10; // $/L landed at Abidjan
+  const landedFcfa = Math.round(landed * 655.957); // USD to FCFA
+  const ceiling = 820; // super sans plomb official ceiling
+
+  const subvUnitFcfa = Math.max(0, landedFcfa - ceiling);
+  // Monthly cost: ~1.6 billion L/year → ~133M L/month
+  const monthlyCostBn = Math.round(subvUnitFcfa * 133 / 1000); // Mds FCFA
+  const pibPct = ((monthlyCostBn * 12) / 70000 * 100).toFixed(1); // ~70Mds USD GDP
+
+  let scenario, color, alert;
+  if (brent < 85) { scenario='A — Résolution'; color='var(--green)'; alert='Prix marché < plafond'; }
+  else if (brent < 115) { scenario='B — Statu quo'; color='#f59e0b'; alert='Gel tenable à court terme'; }
+  else if (brent < 128) { scenario='C — Dégradation'; color='#f97316'; alert='⚠ Révision probable'; }
+  else { scenario='D — Critique'; color='#ef4444'; alert='🔴 Gel insoutenable'; }
+
+  const set = (id, val, col) => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = val; if (col) el.style.color = col; }
+  };
+  set('simSuper', landedFcfa, color);
+  set('simSubv', subvUnitFcfa > 0 ? '+' + subvUnitFcfa : '0', color);
+  set('simCout', subvUnitFcfa > 0 ? '~' + monthlyCostBn : '0', color);
+  set('simPIB', subvUnitFcfa > 0 ? pibPct : '0.0', color);
+  set('simScen', scenario, color);
+  set('simAlert', alert, null);
+
+  // Update composite score
+  updateCompositeScore(brent);
+
+  // Alert banner
+  const banner = document.getElementById('alertBanner');
+  const bannerText = document.getElementById('alertBannerText');
+  if (brent >= 128 && banner && bannerText) {
+    bannerText.textContent = '🔴 SIMULATION : Brent $' + brent + '/bbl → Gel des prix INSOUTENABLE · Subvention implicite ~' + monthlyCostBn + ' Mds FCFA/mois (' + pibPct + '% PIB/an)';
+    banner.style.display = 'block';
+  } else if (banner && brent < 128) {
+    banner.style.display = 'none';
+  }
+}
+
+// ── COMPOSITE SCORE ───────────────────────────────────────────────
+function updateCompositeScore(brent) {
+  brent = brent || SEED.brent;
+  // 6 pillars, each 0-20 points (lower = worse)
+  const energie    = brent < 85 ? 18 : brent < 110 ? 12 : brent < 130 ? 6 : 2;
+  const fiscal     = brent < 90 ? 18 : brent < 110 ? 12 : brent < 120 ? 7 : 3;
+  const cacao      = 4; // already in crisis
+  const logistique = 10; // amber
+  const alimentaire = 11; // fao 128.5 — amber
+  const social      = 9; // 37.5% poverty
+
+  const total = energie + fiscal + cacao + logistique + alimentaire + social;
+  // Scale: 0=worst, 100=best → invert: score = total/120*100
+  const score = Math.round(total / 120 * 100);
+  const inverse = 100 - score; // vulnerability score (higher = worse)
+
+  const el = document.getElementById('scoreComposite');
+  const badge = document.getElementById('scoreBadge');
+  if (el) el.textContent = inverse;
+  if (badge) {
+    if (inverse >= 70) { badge.textContent = '🔴 ALERTE CRITIQUE'; badge.style.background = 'rgba(239,68,68,.15)'; badge.style.color = '#ef4444'; badge.style.borderColor = 'rgba(239,68,68,.3)'; }
+    else if (inverse >= 45) { badge.textContent = '🟡 VIGILANCE ÉLEVÉE'; badge.style.background = 'rgba(245,158,11,.15)'; badge.style.color = '#f59e0b'; badge.style.borderColor = 'rgba(245,158,11,.3)'; }
+    else { badge.textContent = '🟢 SITUATION STABLE'; badge.style.background = 'rgba(16,185,129,.15)'; badge.style.color = '#10b981'; badge.style.borderColor = 'rgba(16,185,129,.3)'; }
+  }
+  const scoreDate = document.getElementById('scoreDate');
+  if (scoreDate) scoreDate.textContent = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+}
+
+// ── COUNTDOWN ─────────────────────────────────────────────────────
+(function() {
+  // WEO April 14 countdown
+  const weoDate = new Date('2026-04-14T00:00:00Z');
+  const now = new Date();
+  const diff = Math.ceil((weoDate - now) / 86400000);
+  const weoEl = document.getElementById('weoCountdown');
+  if (weoEl) {
+    if (diff > 0) weoEl.textContent = 'J–' + diff;
+    else if (diff === 0) weoEl.textContent = "AUJOURD'HUI";
+    else weoEl.textContent = 'PUBLIÉ';
+  }
+
+  // April 6 deadline
+  const d6 = new Date('2026-04-06T20:00:00');
+  const d6diff = Math.ceil((d6 - now) / 3600000);
+  const d6el = document.getElementById('cdApril6');
+  if (d6el) {
+    if (d6diff > 24) d6el.textContent = Math.ceil(d6diff/24) + 'j';
+    else if (d6diff > 0) d6el.textContent = d6diff + 'h';
+    else d6el.textContent = 'PASSÉ';
+  }
+})();
+
+// Init simulator and score
+updateSimulator(SEED.brent || 109);
+
 </script>
 </body>
 </html>
