@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Côte d'Ivoire — Tableau de Bord Crise Hormuz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Libre+Franklin:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+<style>
+:root{
+  --bg0:#0c1219; --bg1:#111b25; --bg2:#16232f; --bg3:#1d2e3e;
+  --text:#d4e4f4; --text2:#8fa8be; --text3:#5a7a92;
+  --border:rgba(255,255,255,.07); --border2:rgba(255,255,255,.12);
+  --orange:#f97316; --amber:#f59e0b; --green:#10b981; --red:#ef4444;
+  --teal:#14b8a6; --blue:#3b82f6; --ci-orange:#f97316; --ci-green:#16a34a;
+  --fc:820; /* FCFA super */ --gd:675; /* gasoil */
+  --font:'Libre Franklin',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;min-height:100vh}
+
+/* ── HEADER ─────────────────────────────────────────────────────── */
+.header{background:linear-gradient(135deg,#0a1520 0%,#0e1d2c 40%,#0f2a1a 100%);border-bottom:1px solid rgba(249,115,22,.25);padding:0 28px;display:flex;align-items:center;gap:0;flex-wrap:wrap;position:sticky;top:0;z-index:100;min-height:54px}
+.header-flag{font-size:26px;margin-right:14px;line-height:1;flex-shrink:0}
+.header-title{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.01em;line-height:1.2}
+.header-subtitle{font-size:11px;color:var(--text3);font-weight:400;margin-top:1px}
+.header-meta{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:11px;color:var(--text3)}
+.live-pill{background:rgba(249,115,22,.2);color:var(--orange);border:1px solid rgba(249,115,22,.35);padding:3px 10px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s}
+.live-pill:hover{background:rgba(249,115,22,.3)}
+.gear-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 12px;border-radius:5px;cursor:pointer;font-size:13px;transition:all .15s}
+.gear-btn:hover{background:var(--bg2);color:var(--text)}
+
+/* ── RISK MATRIX ─────────────────────────────────────────────────── */
+#riskMatrix{background:var(--bg1);border-bottom:1px solid rgba(249,115,22,.15);padding:8px 28px;display:flex;align-items:center;gap:0;flex-wrap:wrap}
+.risk-pill{display:flex;align-items:center;gap:6px;padding:6px 14px;border-right:1px solid var(--border);cursor:pointer;transition:background .15s;white-space:nowrap}
+.risk-pill:hover{background:rgba(255,255,255,.04)}
+.risk-dot{font-size:12px;transition:color .3s}
+.risk-label{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text2)}
+.risk-val{font-size:10px;color:var(--text3);font-family:var(--mono);margin-left:2px}
+.risk-green{background:rgba(16,185,129,.04)}.risk-green .risk-dot{color:#10b981}
+.risk-amber{background:rgba(245,158,11,.06)}.risk-amber .risk-dot{color:#f59e0b}
+.risk-red{background:rgba(239,68,68,.07)}.risk-red .risk-dot{color:#ef4444}
+@keyframes riskPulse{0%,100%{opacity:1}50%{opacity:.6}}
+.risk-red .risk-dot{animation:riskPulse 2s ease-in-out infinite}
+
+/* ── TABS ─────────────────────────────────────────────────────────── */
+.tabs{display:flex;border-bottom:1px solid var(--border);padding:0 28px;background:var(--bg1);overflow-x:auto;gap:2px}
+.tab{padding:11px 18px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:600}
+
+/* ── PANELS ──────────────────────────────────────────────────────── */
+.panel{display:none;padding:20px 28px 40px;max-width:1400px;margin:0 auto}
+.panel.active{display:block}
+
+/* ── KPI CARDS ───────────────────────────────────────────────────── */
+.kpi-section{margin-bottom:4px}
+.kpi-row-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding:12px 0 6px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px}
+.kpi-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color .2s}
+.kpi-card:hover{border-color:var(--border2)}
+.kpi-card.red{border-top:2px solid var(--red)}
+.kpi-card.amber{border-top:2px solid var(--amber)}
+.kpi-card.green{border-top:2px solid var(--green)}
+.kpi-card.orange{border-top:2px solid var(--orange)}
+.kpi-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:700;color:var(--text);font-family:var(--mono);line-height:1.1}
+.kpi-unit{font-size:12px;font-weight:400;color:var(--text3)}
+.kpi-badge{font-size:10px;margin-top:6px;color:var(--text2);line-height:1.4}
+.kpi-badge.warn{color:var(--amber)}
+.kpi-badge.up{color:var(--red)}
+.kpi-badge.ok{color:var(--green)}
+
+/* ── SITREP ──────────────────────────────────────────────────────── */
+.sitrep{background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden}
+.sitrep-hdr{background:rgba(249,115,22,.08);border-bottom:1px solid rgba(249,115,22,.2);padding:10px 18px;display:flex;align-items:center;justify-content:space-between}
+.sitrep-hdr-left{display:flex;align-items:center;gap:10px}
+.sitrep-badge{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:.06em}
+.sitrep-day{font-size:10px;color:var(--text3)}
+.sitrep-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sitrep-section{padding:14px 18px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+.sitrep-section:nth-child(2n){border-right:none}
+.sitrep-section:last-child,.sitrep-section.full{grid-column:1/-1;border-right:none}
+.sitrep-section-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.sitrep-section-title .icon{font-size:13px}
+.sitrep-text{font-size:12px;color:var(--text);line-height:1.7;outline:none;cursor:text;border-left:2px solid rgba(239,68,68,.3);padding-left:10px}
+.sitrep-text:focus{border-left-color:rgba(239,68,68,.7);background:rgba(249,115,22,.03)}
+.sitrep-footer{padding:8px 18px;display:flex;justify-content:space-between;font-size:10px;color:var(--text3);border-top:1px solid var(--border)}
+
+/* ── CHARTS ──────────────────────────────────────────────────────── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.chart-grid.three{grid-template-columns:1fr 1fr 1fr}
+.chart-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px}
+.chart-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
+.chart-sub{font-size:10px;color:var(--text3);margin-bottom:10px;line-height:1.5}
+.chart-wrap{position:relative}
+
+/* ── TIMELINE ────────────────────────────────────────────────────── */
+.timeline-table{width:100%;border-collapse:collapse;font-size:12px}
+.timeline-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.tl-date{color:var(--text3);font-family:var(--mono);font-size:11px;white-space:nowrap;width:110px}
+.tl-actor{color:var(--orange);font-weight:600;font-size:11px;width:130px}
+.tl-event{color:var(--text2);line-height:1.6}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;margin-right:6px;letter-spacing:.05em}
+.badge-red{background:rgba(239,68,68,.15);color:#ef4444}
+.badge-amber{background:rgba(245,158,11,.15);color:#f59e0b}
+.badge-green{background:rgba(16,185,129,.15);color:#10b981}
+.badge-blue{background:rgba(59,130,246,.15);color:#3b82f6}
+.badge-ci{background:rgba(249,115,22,.15);color:#f97316}
+
+/* ── ALERT BANNER ────────────────────────────────────────────────── */
+#alertBanner{display:none;background:rgba(239,68,68,.1);border-left:4px solid #ef4444;padding:10px 28px;font-size:12px;font-weight:600;color:#ef4444;cursor:pointer}
+@keyframes alertPulse{0%,100%{border-left-color:#ef4444}50%{border-left-color:#f97316}}
+#alertBanner{animation:alertPulse 2s ease-in-out infinite}
+
+/* ── INFO BOXES ──────────────────────────────────────────────────── */
+.info-box{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:14px}
+.info-box h3{font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px}
+.price-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.price-table th{text-align:left;padding:6px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);border-bottom:1px solid var(--border)}
+.price-table td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+.price-table tr:last-child td{border-bottom:none}
+.val{font-family:var(--mono);color:var(--text);text-align:right}
+.highlight{background:rgba(249,115,22,.06)}
+
+/* ── FISCAL BOX ──────────────────────────────────────────────────── */
+.fiscal-box{background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.2);border-left:3px solid var(--orange);border-radius:0 8px 8px 0;padding:16px;margin-top:12px}
+.fiscal-box h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:8px}
+
+/* ── FOOTER ──────────────────────────────────────────────────────── */
+.footer{border-top:1px solid var(--border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text3);flex-wrap:wrap;gap:8px}
+.footer a{color:var(--blue);text-decoration:none}
+
+@media(max-width:768px){
+  .sitrep-grid{grid-template-columns:1fr}
+  .sitrep-section:nth-child(2n){border-right:none}
+  .sitrep-section{border-right:none}
+  .chart-grid,.chart-grid.three{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  #riskMatrix{padding:8px 16px}
+  .risk-label{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ALERT BANNER -->
+<div id="alertBanner" onclick="this.style.display='none'">
+  <span id="alertBannerText">⚠ Seuil d'alerte franchi</span>
+  <span style="float:right;opacity:.6;font-weight:400;font-size:11px">Cliquer pour fermer</span>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-flag">🇨🇮</div>
+  <div>
+    <div class="header-title">Côte d\'Ivoire — Tableau de Bord Crise Hormuz</div>
+    <div class="header-subtitle">Impact économique &amp; fiscal de la fermeture du détroit de Hormuz · Mise à jour automatique</div>
+  </div>
+  <div class="header-meta">
+    <span style="font-size:11px">Jour <span id="dayCounter">36</span> · <span id="autoDate"></span></span>
+    <span id="livePill" class="live-pill" onclick="refreshData()" title="Cliquer pour actualiser">● DONNÉES</span>
+    <button class="gear-btn" onclick="alert('Panneau admin — à venir')">⚙</button>
+  </div>
+</header>
+
+<!-- RISK MATRIX -->
+<div id="riskMatrix">
+  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-right:16px;flex-shrink:0">Matrice de Risque</div>
+  <div class="risk-pill risk-red" id="riskEnergie" onclick="switchTab('energie')" title="Énergie">
+    <span class="risk-dot">●</span><span class="risk-label">Énergie</span><span class="risk-val" id="rvEnergie">109$/bbl</span>
+  </div>
+  <div class="risk-pill risk-red" id="riskFiscal" onclick="switchTab('fiscal')" title="Fiscalité">
+    <span class="risk-dot">●</span><span class="risk-label">Fiscal</span><span class="risk-val" id="rvFiscal">Gel prix</span>
+  </div>
+  <div class="risk-pill risk-red" id="riskCacao" onclick="switchTab('agriculture')" title="Cacao">
+    <span class="risk-dot">●</span><span class="risk-label">Cacao</span><span class="risk-val" id="rvCacao">~$4 200/t</span>
+  </div>
+  <div class="risk-pill risk-amber" id="riskLogistique" onclick="switchTab('energie')" title="Logistique">
+    <span class="risk-dot">●</span><span class="risk-label">Logistique</span><span class="risk-val" id="rvLogistique">+40%</span>
+  </div>
+  <div class="risk-pill risk-amber" id="riskAlimentaire" onclick="switchTab('agriculture')" title="Alimentaire">
+    <span class="risk-dot">●</span><span class="risk-label">Alimentaire</span><span class="risk-val" id="rvAlimentaire">128.5</span>
+  </div>
+  <div class="risk-pill risk-amber" id="riskSocial" onclick="switchTab('social')" title="Social">
+    <span class="risk-dot">●</span><span class="risk-label">Social</span><span class="risk-val" id="rvSocial">37.5%</span>
+  </div>
+  <div style="margin-left:auto;font-size:10px;color:var(--text3);display:flex;align-items:center;gap:6px;flex-shrink:0">
+    <span class="risk-green" style="padding:2px 6px;border-radius:3px;font-size:10px">● Stable</span>
+    <span class="risk-amber" style="padding:2px 6px;border-radius:3px;font-size:10px">● Vigilance</span>
+    <span class="risk-red" style="padding:2px 6px;border-radius:3px;font-size:10px">● Alerte</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('apercu')">Vue d'ensemble</div>
+  <div class="tab" onclick="switchTab('energie')">Énergie &amp; Carburants</div>
+  <div class="tab" onclick="switchTab('agriculture')">Agriculture &amp; Cacao</div>
+  <div class="tab" onclick="switchTab('fiscal')">Fiscal &amp; Budget</div>
+  <div class="tab" onclick="switchTab('social')">Risque Social</div>
+  <div class="tab" onclick="switchTab('ecowas')">🌍 Comparaison CEDEAO</div>
+  <div class="tab" onclick="switchTab('sources')">Sources &amp; Méthode</div>
+</div>
+
+<!-- ═══ PANEL : VUE D'ENSEMBLE ═══ -->
+<div class="panel active" id="panel-apercu">
+
+  <!-- SITREP -->
+  <div class="sitrep" style="margin-bottom:16px">
+    <div class="sitrep-hdr">
+      <div class="sitrep-hdr-left">
+        <span class="sitrep-badge">🚨 RAPPORT DE SITUATION</span>
+        <span id="sitrepDayBadge" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.25);font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px">Jour 36 · 5 Avr 2026</span>
+      </div>
+      <span style="font-size:10px;color:var(--text3);font-style:italic">✎ Cliquer pour éditer · sauvegarde auto</span>
+    </div>
+    <div class="sitrep-grid">
+      <!-- MESURES GOUVERNEMENTALES -->
+      <div class="sitrep-section full" style="background:rgba(16,185,129,.03)">
+        <div class="sitrep-section-title"><span class="icon">🇨🇮</span>Mesures gouvernementales ivoiriennes</div>
+        <div class="sitrep-text" id="sitrepGouv" contenteditable="true">
+          <strong>Prix des carburants maintenus inchangés pour avril 2026</strong> (communiqué officiel DGH/Min. Mines &amp; Pétrole, 31 mars 2026) :
+          Super sans plomb <strong>820 FCFA/L</strong> · Gasoil <strong>675 FCFA/L</strong> · Pétrole lampant 705 FCFA/L.
+          Gaz butane : 6 kg = 2 000 FCFA · 12,5 kg = 5 200 FCFA · 15 kg = 6 965 FCFA.
+          Mécanisme d'ajustement automatique mensuel suspendu dans les faits pour protéger le pouvoir d'achat.
+          <strong style="color:#f59e0b">Coût fiscal croissant</strong> : chaque mois de gel représente un manque à gagner fiscal estimé à 30–80 Mds FCFA selon le niveau du Brent.
+          La <strong>raffinerie SIR</strong> (Abidjan) traite le brut importé — fortement exposée à la hausse des coûts d'approvisionnement.
+        </div>
+      </div>
+      <!-- PÉTROLE -->
+      <div class="sitrep-section">
+        <div class="sitrep-section-title"><span class="icon">⚡</span>Pétrole &amp; Géopolitique</div>
+        <div class="sitrep-text" id="sitrepPetrole" contenteditable="true">
+          Brent <strong>$109.03/bbl</strong> · WTI <strong>$111.54</strong> — inversion historique (WTI &gt; Brent pour la 1ère fois depuis 2020).
+          Brent +55% en mars 2026 — record depuis 1988.
+          <strong style="color:#ef4444">Deadline April 6 (Trump) :</strong> ultimatum pour réouverture Hormuz ou frappe sur puits de pétrole, Kharg Island.
+          Afrique de l'Ouest : –43% des exportations pétrolières du Golfe vers l'Afrique (4 semaines, Kpler).
+          IEA : 12 mbd perdus — pire crise énergétique mondiale depuis les chocs de 1973/1979.
+          <strong style="color:#14b8a6">Signal positif :</strong> CMA CGM 1er navire occidental à transiter Hormuz (5 avr).
+        </div>
+      </div>
+      <!-- CACAO + ENGRAIS -->
+      <div class="sitrep-section">
+        <div class="sitrep-section-title"><span class="icon">🌱</span>Agriculture, Cacao &amp; Engrais</div>
+        <div class="sitrep-text" id="sitrepCacao" contenteditable="true">
+          Double choc inédit : crise du cacao <em>et</em> choc Hormuz simultanés.
+          Cours mondiaux cacao : <strong>~$4 200/t</strong> (contre $12 000/t fin 2024, –65%).
+          Prix bord champ révisé à la baisse par le CCC : <strong>1 200 FCFA/kg</strong> (contre 2 800 FCFA, –57%, mars 2026).
+          FAO Indice alimentaire mars 2026 : <strong>128.5 pts (+2.4% MoM)</strong> — 6e mois le plus élevé.
+          Engrais : urée +46% MoM (Banque Mondiale) · ~$700/MT (Égypte FOB) · 30% du commerce mondial d'urée perturbé.
+          <strong style="color:#ef4444">Risque rendements H2 2026 :</strong> application d'engrais réduite avant saison petite traite.
+        </div>
+      </div>
+      <!-- ALERTE FISCALE -->
+      <div class="sitrep-section full" style="background:rgba(249,115,22,.04);border-left:3px solid var(--orange)">
+        <div class="sitrep-section-title"><span class="icon">💰</span>Alerte Fiscale CIV</div>
+        <div class="sitrep-text" id="sitrepFiscal" contenteditable="true">
+          <strong style="color:#ef4444">🔴 Alerte FMI — Ecofin Agency (30 mars 2026) :</strong>
+          CIV identifiée parmi <strong>12 pays en développement</strong> confrontés simultanément à la hausse des spreads souverains
+          et au service de la dette supérieur à la médiane 2026 <em>(blog FMI 30 mars · Abebe Aemro Selassie, Dir. Afrique FMI)</em>.
+          Prévisions BAD 6.5% basées sur Brent <strong>$68–69/bbl</strong> (WEO oct. 2025) — +58% au-dessus du niveau actuel.
+          Déficit courant projeté –2.3% PIB (BAD base) : s'élargit avec hausse facture pétrolière.
+          Dette publique : <strong>~57.3% PIB</strong> · Service dette/recettes : <strong>17.7%</strong>
+          (seuil critique FMI : 18%) · "La marge pour absorber les chocs est limitée" (Stratégie dette MFB 2025–2029).
+          <strong style="color:#f97316">WEO FMI 14 avr. 2026</strong> = 1er réexamen multilatéral officiel post-choc.
+          <br><br>
+          La CI absorbe le choc via le <strong>gel des prix à la pompe</strong> (mécanisme PMC suspendu).
+          Coût estimé du gel : <strong>~50 Mds FCFA/mois</strong> (Brent $109).
+          Recettes fiscales pétrole budgétisées : ~1.2% PIB = 711 Mds FCFA.
+          Double pression fiscale : (1) subvention implicite carburant + (2) chute recettes cacao (–57% bord champ).
+          Eurobond $1.75 Mds à 6.45% (mars 2025) · Programme FMI $4.8 Mds (2023–2026) — filets de sécurité préservés.
+          <strong>Jusqu'à quand le gel est-il tenable ?</strong> Si Brent > $120 durablement : révision prix à la pompe probable.
+        </div>
+      </div>
+    </div>
+    <div class="sitrep-footer">
+      <span>Mis à jour : <span id="sitrepDate"></span></span>
+      <span>Sources : RTI · FratMat · DGH-CI · FAO · WB · Jeune Afrique · Kpler</span>
+    </div>
+  </div>
+
+  <!-- KPI ROW 1: GLOBAL -->
+  <div class="kpi-section">
+    <div class="kpi-row-label">🌍 Marchés mondiaux</div>
+    <div class="kpi-grid">
+      <div class="kpi-card red">
+        <div class="kpi-label">Brent crude</div>
+        <div class="kpi-value" id="kpiBrent">109.03<span class="kpi-unit"> $/bbl</span></div>
+        <div class="kpi-badge up">+55% mars 2026 · record depuis 1988</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">WTI</div>
+        <div class="kpi-value" id="kpiWti">111.54<span class="kpi-unit"> $/bbl</span></div>
+        <div class="kpi-badge up">Inversion WTI&gt;Brent · 1ère fois depuis 2020</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Transits Hormuz</div>
+        <div class="kpi-value" id="kpiTransits">5<span class="kpi-unit"> navires/j</span></div>
+        <div class="kpi-badge up">▼ –96% vs référence (138/j)</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">FAO Indice alim.</div>
+        <div class="kpi-value" id="kpiFao">128.5<span class="kpi-unit"> pts</span></div>
+        <div class="kpi-badge warn">+2.4% MoM · mars 2026 · 6 mois de hausse</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Urée (engrais)</div>
+        <div class="kpi-value" id="kpiUree">700<span class="kpi-unit"> $/MT</span></div>
+        <div class="kpi-badge up">+46% MoM · Banque Mondiale</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">Exportations pétrol. Afrique</div>
+        <div class="kpi-value" style="font-size:17px;color:#ef4444">–43%<span class="kpi-unit"> MoM</span></div>
+        <div class="kpi-badge warn">4 pays plus exposés · Kpler</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI ROW 2: CIV PRIX CARBURANTS -->
+  <div class="kpi-section">
+    <div class="kpi-row-label">🇨🇮 Prix carburants Côte d\'Ivoire (avril 2026 · DGH officiel)</div>
+    <div class="kpi-grid">
+      <div class="kpi-card green">
+        <div class="kpi-label">Super sans plomb</div>
+        <div class="kpi-value" id="kpiSuper">820<span class="kpi-unit"> FCFA/L</span></div>
+        <div class="kpi-badge ok">Inchangé · gel prix déc. 2025→avr. 2026</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Gasoil moteur</div>
+        <div class="kpi-value" id="kpiGasoil">675<span class="kpi-unit"> FCFA/L</span></div>
+        <div class="kpi-badge ok">Inchangé · plafond DGH officiel</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Pétrole lampant</div>
+        <div class="kpi-value" id="kpiLampant">705<span class="kpi-unit"> FCFA/L</span></div>
+        <div class="kpi-badge ok">Inchangé · ménages pauvres</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Gaz butane 6 kg</div>
+        <div class="kpi-value" id="kpiGaz6">2 000<span class="kpi-unit"> FCFA</span></div>
+        <div class="kpi-badge ok">Inchangé · cuisine ménages</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Gaz butane 12.5 kg</div>
+        <div class="kpi-value" id="kpiGaz12">5 200<span class="kpi-unit"> FCFA</span></div>
+        <div class="kpi-badge ok">Inchangé · format familial</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">Subvention implicite est.</div>
+        <div class="kpi-value" id="kpiSubvention" style="font-size:17px;color:#f59e0b">~50<span class="kpi-unit"> Mds/mois</span></div>
+        <div class="kpi-badge warn">Estimation WB EEAM · Brent $109</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI ROW 3: CACAO & AGRICULTURE -->
+  <div class="kpi-section">
+    <div class="kpi-row-label">🌱 Agriculture &amp; Cacao</div>
+    <div class="kpi-grid">
+      <div class="kpi-card red">
+        <div class="kpi-label">Prix mondial cacao</div>
+        <div class="kpi-value" id="kpiCacao" style="font-size:18px;color:#ef4444">~4 200<span class="kpi-unit"> $/t</span></div>
+        <div class="kpi-badge up">–65% vs pic $12 000 (fin 2024)</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Prix bord champ CCC</div>
+        <div class="kpi-value" id="kpiBordChamp" style="font-size:18px;color:#ef4444">1 200<span class="kpi-unit"> FCFA/kg</span></div>
+        <div class="kpi-badge up">–57% vs 2 800 FCFA · mars 2026</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Cacao stocké (blocage)</div>
+        <div class="kpi-value" style="font-size:16px;color:#ef4444">centaines<span class="kpi-unit"> milliers t</span></div>
+        <div class="kpi-badge up">Abidjan · San Pedro · coopératives</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">Part CIV marché mondial</div>
+        <div class="kpi-value" style="font-size:18px;color:#f59e0b">39<span class="kpi-unit">%</span></div>
+        <div class="kpi-badge warn">1er producteur mondial · 2024</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">Riz (Thai 5%)</div>
+        <div class="kpi-value" id="kpiRiz" style="font-size:18px">346<span class="kpi-unit"> $/t</span></div>
+        <div class="kpi-badge warn">–3% mars 2026 (FAO) · import.</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">Anacarde (cajou)</div>
+        <div class="kpi-value" style="font-size:16px;color:#f59e0b">40%<span class="kpi-unit"> prod. mondiale</span></div>
+        <div class="kpi-badge warn">Coûts logistiques en hausse</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div style="margin-top:16px">
+    <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px">📋 Chronologie des événements clés</div>
+    <div class="info-box">
+      <table class="timeline-table">
+        <tr style="background:rgba(239,68,68,.08)">
+          <td class="tl-date" style="color:#ef4444;font-weight:700">5 Avr 2026</td>
+          <td class="tl-actor">Marchés</td>
+          <td class="tl-event"><span class="badge badge-red">INVERSION</span>WTI $111.54 &gt; Brent $109.03 — 1ère inversion depuis 2020. CMA CGM 1er navire occidental à transiter Hormuz. Deadline April 6 (8PM ET) : ultimatum Trump Iran.</td>
+        </tr>
+        <tr>
+          <td class="tl-date">3–4 Avr 2026</td>
+          <td class="tl-actor">FAO / Banque Mondiale</td>
+          <td class="tl-event"><span class="badge badge-amber">ALERTE</span>Indice FAO alimentaire mars : 128.5 pts (+2.4% MoM) — 2e hausse consécutive. Urée +46% MoM. 45 millions de personnes supplémentaires menacées de faim aiguë (PAM).</td>
+        </tr>
+        <tr>
+          <td class="tl-date">1–2 Avr 2026</td>
+          <td class="tl-actor">Trump / IEA</td>
+          <td class="tl-event"><span class="badge badge-red">ESCALADE</span>Discours Trump à la Nation : WTI +11% à $110 intraday. Diesel européen &gt; $200/bbl. IEA Birol : "Avril sera bien pire que mars — en avril il n'y a rien." Essence US &gt;$4/gallon.</td>
+        </tr>
+        <tr style="background:rgba(249,115,22,.05)">
+          <td class="tl-date">31 Mar 2026</td>
+          <td class="tl-actor" style="color:var(--orange)">Gouv. Côte d'Ivoire</td>
+          <td class="tl-event"><span class="badge badge-ci">🇨🇮 DÉCISION</span><strong>Prix carburants maintenus inchangés pour avril 2026</strong> — DGH/Min. Mines &amp; Énergie. Super : 820 FCFA/L · Gasoil : 675 FCFA/L. Politique de protection du pouvoir d'achat maintenue malgré volatilité internationale (RTI, FratMat, KOACI).</td>
+        </tr>
+        <tr>
+          <td class="tl-date">4 Mars 2026</td>
+          <td class="tl-actor" style="color:#ef4444">Conseil Café-Cacao</td>
+          <td class="tl-event"><span class="badge badge-red">CHOC CACAO</span>Prix bord champ révisé de 2 800 à <strong>1 200 FCFA/kg (–57%)</strong> — ajustement contraint par effondrement cours mondiaux (~$4 000/t). Centaines de milliers de tonnes bloquées dans entrepôts Abidjan/San Pedro.</td>
+        </tr>
+        <tr>
+          <td class="tl-date">28 Fév 2026</td>
+          <td class="tl-actor">USA / Israël / Iran</td>
+          <td class="tl-event"><span class="badge badge-red">JOUR J</span>Frappes conjointes USA-Israël sur l'Iran. Fermeture effective du détroit de Hormuz (138 navires/jour → ~5). Brent : $68/bbl → +$109 en 5 semaines. Pire crise énergétique mondiale depuis les années 1970.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL : ÉNERGIE & CARBURANTS ═══ -->
+<div class="panel" id="panel-energie">
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">Prix Brent — Évolution depuis le début de la crise</div>
+      <div class="chart-sub">USD/bbl · Source : Investing.com / OilPrice.com</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="chartBrent"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Carburants CIV — Prix officiels (FCFA/L)</div>
+      <div class="chart-sub">Grille DGH · Prix plafonds officiels · inchangés depuis déc. 2025</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="chartCarburants"></canvas></div>
+    </div>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">Coût estimé du gel des prix (Mds FCFA/mois)</div>
+      <div class="chart-sub">Estimation WB · Subvention implicite selon niveau Brent</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chartSubvention"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Raffinerie SIR — Exposition au choc</div>
+      <div class="chart-sub">La SIR (Abidjan) traite ~60% des besoins en produits raffinés de la CIV</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chartSIR"></canvas></div>
+    </div>
+  </div>
+
+  <div class="info-box" style="margin-top:8px">
+    <h3>Structure d'approvisionnement en pétrole — Côte d\'Ivoire</h3>
+    <table class="price-table">
+      <thead><tr><th>Source / Route</th><th>Part estimée</th><th>Exposition Hormuz</th><th>Statut actuel</th></tr></thead>
+      <tbody>
+        <tr><td>Golfe Persique (Arabie Saoudite, EAU)</td><td class="val">~40–50%</td><td style="color:#ef4444">Directe</td><td class="val" style="color:#ef4444">Perturbée</td></tr>
+        <tr><td>Nigeria / Afrique de l'Ouest</td><td class="val">~25–30%</td><td style="color:#10b981">Indirecte</td><td class="val" style="color:#10b981">Opérationnelle</td></tr>
+        <tr><td>Production nationale (offshore CI)</td><td class="val">~15%</td><td style="color:#10b981">Nulle</td><td class="val" style="color:#10b981">Opérationnelle</td></tr>
+        <tr><td>Autres (Amérique Latine, Med.)</td><td class="val">~10–15%</td><td style="color:#f59e0b">Faible</td><td class="val" style="color:#10b981">Opérationnelle</td></tr>
+        <tr class="highlight"><td><strong>Raffinerie SIR (Abidjan)</strong></td><td class="val"><strong>~60% capacité</strong></td><td style="color:#ef4444"><strong>Exposition forte</strong></td><td class="val" style="color:#f59e0b">Coûts en hausse</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ PANEL : AGRICULTURE & CACAO ═══ -->
+<div class="panel" id="panel-agriculture">
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">Prix mondial du cacao ($/tonne)</div>
+      <div class="chart-sub">ICE Futures · Effondrement structurel accentué par crise Hormuz</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="chartCacao"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Prix bord champ CIV (FCFA/kg)</div>
+      <div class="chart-sub">Conseil Café-Cacao (CCC) · Campagne 2025-2026</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="chartBordChamp"></canvas></div>
+    </div>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">Prix urée (engrais) — Impact sur agriculture CIV</div>
+      <div class="chart-sub">USD/MT · FOB Égypte · Source Banque Mondiale</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chartUree"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Double choc — Cacao + Énergie : impact revenu planteurs</div>
+      <div class="chart-sub">Estimation perte revenu annuel / famille planteur (ha)</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chartRevenu"></canvas></div>
+    </div>
+  </div>
+
+  <div class="info-box" style="margin-top:8px">
+    <h3>🌱 Canaux de transmission Hormuz → Agriculture ivoirienne</h3>
+    <table class="price-table">
+      <thead><tr><th>Canal</th><th>Impact direct</th><th>Délai</th><th>Filière concernée</th><th>Niveau de risque</th></tr></thead>
+      <tbody>
+        <tr><td>Hausse coût engrais (urée +46%)</td><td>Réduction des applications · baisse rendements</td><td>1–3 mois</td><td>Cacao · Caoutchouc · Palme</td><td style="color:#ef4444">🔴 Élevé</td></tr>
+        <tr><td>Hausse coût carburant transport</td><td>Coûts acheminement port +20–40%</td><td>Immédiat</td><td>Toutes filières d'export</td><td style="color:#f59e0b">🟡 Modéré</td></tr>
+        <tr><td>Hausse coûts fret maritime</td><td>Compétitivité exportations dégradée</td><td>Immédiat</td><td>Cacao · Anacarde · Palme</td><td style="color:#f59e0b">🟡 Modéré</td></tr>
+        <tr><td>Hausse prix riz importé</td><td>Inflation alimentaire intérieure</td><td>2–4 mois</td><td>Consommation ménages</td><td style="color:#f59e0b">🟡 Modéré</td></tr>
+        <tr class="highlight"><td><strong>Choc cacao (cours mondiaux)</strong></td><td><strong>–57% prix bord champ · blocage stock</strong></td><td>Actuel</td><td>Cacao (39% marché mondial)</td><td style="color:#ef4444"><strong>🔴 Très élevé</strong></td></tr>
+        <tr><td>Réduction disponibilité soufre/ammoniaque</td><td>Pénurie intrants spécialisés</td><td>3–6 mois</td><td>Cacao (produits phytosanitaires)</td><td style="color:#ef4444">🔴 Élevé</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ PANEL : FISCAL & BUDGET ═══ -->
+<div class="panel" id="panel-fiscal">
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">Analyse fiscale — Coût du gel des prix (scénarios)</div>
+      <div class="chart-sub">Mds FCFA/mois · Estimation WB EEAM · selon niveau Brent</div>
+      <div class="chart-wrap" style="height:260px"><canvas id="chartFiscalScenario"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Espace budgétaire 2026 — Pression cumulée</div>
+      <div class="chart-sub">% PIB · Programme FMI · Cibles 2026</div>
+      <div class="chart-wrap" style="height:260px"><canvas id="chartBudget"></canvas></div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <h3>📊 Analyse des scénarios fiscaux — Subvention implicite carburants</h3>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">
+      La Côte d\'Ivoire gère le choc via un gel des prix à la pompe. Cette approche crée une subvention <em>implicite</em> (non-ajustement du mécanisme automatique) dont le coût mensuel dépend directement du niveau du Brent.
+    </p>
+    <table class="price-table">
+      <thead><tr><th>Scénario</th><th>Brent</th><th>Super CIV équitable (est.)</th><th>Super plafond actuel</th><th>Subvention implicite</th><th>Coût fiscal/mois</th><th>% PIB/an</th></tr></thead>
+      <tbody>
+        <tr style="background:rgba(16,185,129,.06)">
+          <td><strong style="color:#10b981">A — Résolution Hormuz</strong></td>
+          <td class="val" style="color:#10b981">~$75/bbl</td>
+          <td class="val">~650 FCFA</td><td class="val">820 FCFA</td>
+          <td class="val" style="color:#10b981">Prix &gt; coût</td>
+          <td class="val" style="color:#10b981">+15 Mds (recette)</td>
+          <td class="val" style="color:#10b981">+0.2%</td>
+        </tr>
+        <tr>
+          <td><strong style="color:#f59e0b">B — Statu quo (~$109)</strong></td>
+          <td class="val" style="color:#f59e0b">~$109/bbl</td>
+          <td class="val">~875 FCFA</td><td class="val">820 FCFA</td>
+          <td class="val" style="color:#f59e0b">~55 FCFA/L</td>
+          <td class="val" style="color:#f59e0b">~40–60 Mds</td>
+          <td class="val" style="color:#f59e0b">~0.5–0.8%</td>
+        </tr>
+        <tr style="background:rgba(245,158,11,.05)">
+          <td><strong style="color:#f59e0b">C — Aggravation ($120)</strong></td>
+          <td class="val" style="color:#f59e0b">~$120/bbl</td>
+          <td class="val">~950 FCFA</td><td class="val">820 FCFA</td>
+          <td class="val" style="color:#f59e0b">~130 FCFA/L</td>
+          <td class="val" style="color:#f59e0b">~70–100 Mds</td>
+          <td class="val" style="color:#f59e0b">~1.0–1.4%</td>
+        </tr>
+        <tr style="background:rgba(239,68,68,.06)">
+          <td><strong style="color:#ef4444">D — Crise extrême ($130+)</strong></td>
+          <td class="val" style="color:#ef4444">$130+/bbl</td>
+          <td class="val">~1 040 FCFA</td><td class="val">820 FCFA</td>
+          <td class="val" style="color:#ef4444">~220 FCFA/L</td>
+          <td class="val" style="color:#ef4444">~120–160 Mds</td>
+          <td class="val" style="color:#ef4444">~1.7–2.3%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="fiscal-box">
+      <h4>⚠ Hypothèses &amp; Limites de l'analyse</h4>
+      <ul style="font-size:11px;color:var(--text2);line-height:1.8;padding-left:16px">
+        <li><strong>Consommation annuelle estimée :</strong> ~1.5–2 milliards de litres (super + gasoil) pour 27M habitants + secteur industriel. Données DGH non publiées.</li>
+        <li><strong>Prix équitable estimé :</strong> approximation via MOPS Singapour + coûts fret + marges. À valider avec PETROCI/SIR.</li>
+        <li><strong>Subvention implicite ≠ subvention budgétisée</strong> : le Trésor verse la différence à la SIR/distributeurs — impact hors-budget possible.</li>
+        <li><strong>Double pression :</strong> gel carburant + chute recettes cacao → pression sur cible déficit FMI 3.6% PIB (2026).</li>
+        <li><strong>Données officielles requises :</strong> engagement Ministère des Finances pour calculer le ratio exact de subvention.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL : RISQUE SOCIAL ═══ -->
+<div class="panel" id="panel-social">
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+    <div class="kpi-card red">
+      <div class="kpi-label">Taux de pauvreté (<$1.90/j)</div>
+      <div class="kpi-value" style="font-size:22px;color:#ef4444">37.5%<span class="kpi-unit"> pop.</span></div>
+      <div class="kpi-badge up">2021 · 22% sous-emploi · 90% emplois informels</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">Part alimentaire budget ménage pauvre</div>
+      <div class="kpi-value" style="font-size:22px;color:#f59e0b">55–65%<span class="kpi-unit"> revenus</span></div>
+      <div class="kpi-badge warn">Très exposés à l'inflation énergie+aliment.</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">Emplois liés au cacao</div>
+      <div class="kpi-value" style="font-size:22px;color:#f59e0b">~6M<span class="kpi-unit"> personnes</span></div>
+      <div class="kpi-badge warn">Dont ~600 000 planteurs directs</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">Inflation alimentaire estimée</div>
+      <div class="kpi-value" style="font-size:18px;color:#ef4444">+3–6%<span class="kpi-unit"> (risque H2)</span></div>
+      <div class="kpi-badge up">Énergie + engrais + fret pass-through</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">Dépenses transport/ménage</div>
+      <div class="kpi-value" style="font-size:18px;color:#f59e0b">–2.3%<span class="kpi-label"> fév 25–26</span></div>
+      <div class="kpi-badge warn">Gel prix = soulagement actuel (INS CI)</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">Planteurs cacao en détresse</div>
+      <div class="kpi-value" style="font-size:16px;color:#ef4444">Crise<span class="kpi-unit"> majeure</span></div>
+      <div class="kpi-badge up">–57% prix bord champ · stocks bloqués · coopératives menacées</div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <h3>⚠ Analyse du Risque Social — Groupes vulnérables</h3>
+    <table class="price-table">
+      <thead><tr><th>Groupe</th><th>Taille estimée</th><th>Exposition directe</th><th>Mécanisme d'impact</th><th>Urgence</th></tr></thead>
+      <tbody>
+        <tr class="highlight">
+          <td><strong>Planteurs de cacao</strong></td>
+          <td>~600 000 ménages</td>
+          <td style="color:#ef4444">Très forte</td>
+          <td>–57% revenu bord champ · stocks invendus · endettement coopératives</td>
+          <td style="color:#ef4444">🔴 URGENTE</td>
+        </tr>
+        <tr>
+          <td>Transporteurs (woro-woro, gbaka)</td>
+          <td>~800 000 emplois</td>
+          <td style="color:#f59e0b">Forte</td>
+          <td>Gel prix protège mais pression marges si Brent monte → risque révision</td>
+          <td style="color:#f59e0b">🟡 Modérée</td>
+        </tr>
+        <tr>
+          <td>Ménages pauvres urbains (Abidjan)</td>
+          <td>~3–4 M personnes</td>
+          <td style="color:#f59e0b">Forte</td>
+          <td>Pass-through inflation alimentaire · riz · huile · transport</td>
+          <td style="color:#f59e0b">🟡 Modérée</td>
+        </tr>
+        <tr>
+          <td>Petits exploitants agricoles (hors cacao)</td>
+          <td>~2–3 M personnes</td>
+          <td style="color:#f59e0b">Modérée–forte</td>
+          <td>Hausse engrais · coûts de production · accès intrants</td>
+          <td style="color:#f59e0b">🟡 Modérée</td>
+        </tr>
+        <tr>
+          <td>Secteur informel (90% emplois)</td>
+          <td>~15 M travailleurs</td>
+          <td style="color:#f59e0b">Modérée</td>
+          <td>Inflation importée · pouvoir d'achat · pas de filet de sécurité formel</td>
+          <td style="color:#f59e0b">🟡 À surveiller</td>
+        </tr>
+        <tr>
+          <td>Coopératives café-cacao</td>
+          <td>~2 000 coopératives</td>
+          <td style="color:#ef4444">Très forte</td>
+          <td>Stocks invendus · dettes fournisseurs · risque faillite (RICE, 31 mars 2026)</td>
+          <td style="color:#ef4444">🔴 URGENTE</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2);border-left:3px solid var(--green);border-radius:0 6px 6px 0;padding:14px;margin-top:14px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:6px">✅ Facteurs atténuants</div>
+      <ul style="font-size:12px;color:var(--text2);line-height:1.8;padding-left:16px">
+        <li>Gel des prix carburants → protection directe du pouvoir d'achat des transporteurs et ménages urbains</li>
+        <li>Production nationale de pétrole offshore (~15% besoins) → amortisseur partiel</li>
+        <li>Programme FMI actif → discipline fiscale + accès marché international</li>
+        <li>Dépenses transport en baisse de 2.3% (INS CI, fév 25–26) → gel efficace</li>
+        <li>Anacarde (cajou) : dynamique propre, moins exposée au choc Hormuz direct</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL : SOURCES & MÉTHODE ═══ -->
+<div class="panel" id="panel-sources">
+  <div class="info-box">
+    <h3>📋 Sources de données</h3>
+    <table class="price-table">
+      <thead><tr><th>Source</th><th>Données</th><th>Fréquence</th><th>URL / Référence</th></tr></thead>
+      <tbody>
+        <tr><td><strong>DGH / Min. Mines &amp; Énergie CI</strong></td><td>Prix officiels carburants (FCFA/L)</td><td>Mensuelle</td><td>RTI.info · FratMat.info · KOACI</td></tr>
+        <tr><td><strong>Conseil Café-Cacao (CCC)</strong></td><td>Prix bord champ · campagne commercialisation</td><td>Saisonnière</td><td>Jeune Afrique · CCC officiel</td></tr>
+        <tr><td><strong>FAO</strong></td><td>Indice alimentaire mondial (FFPI) · prix riz</td><td>Mensuelle</td><td>fao.org/worldfoodsituation</td></tr>
+        <tr><td><strong>Banque Mondiale</strong></td><td>Urée · prix céréales · Food Security Update</td><td>Mensuelle</td><td>worldbank.org/food-security</td></tr>
+        <tr><td><strong>Kpler / WTO AXSMarine</strong></td><td>Flux pétroliers Hormuz · exports Afrique</td><td>Quotidienne</td><td>datalab.wto.org/Strait-of-Hormuz</td></tr>
+        <tr><td><strong>Investing.com / OilPrice.com</strong></td><td>Prix Brent / WTI en temps réel</td><td>Temps réel</td><td>oilpriceapi.com · investing.com</td></tr>
+        <tr><td><strong>Direction générale du Trésor (France)</strong></td><td>Situation économique et financière CI</td><td>Trimestrielle</td><td>tresor.economie.gouv.fr</td></tr>
+        <tr><td><strong>RICE / Programme Équité</strong></td><td>Crise coopératives café-cacao</td><td>Événementielle</td><td>programme-equite.org (31 mars 2026)</td></tr>
+        <tr style="background:rgba(249,115,22,.05)"><td><strong>Ecofin Agency</strong></td><td>Analyse macro CIV · IMF "12 pays" · dette · WEO</td><td>Événementielle</td><td>ecofinagency.com (30 mars 2026)</td></tr>
+        <tr style="background:rgba(249,115,22,.05)"><td><strong>AfDB–UA–PNUD–CEA</strong></td><td>Impact conflit M-O sur Afrique · 3 horizons · pays vulnérables</td><td>Événementielle</td><td>undp.org/africa · uneca.org (2 avr. 2026)</td></tr>
+        <tr><td><strong>IEA–FMI–Banque Mondiale (joint)</strong></td><td>Déclaration conjointe — choc asymétrique</td><td>Événementielle</td><td>imf.org · worldbank.org (1 avr. 2026)</td></tr>
+        <tr><td><strong>FMI — Article IV + programme CI</strong></td><td>PMC · recettes fiscal pétrole · TMU · spreads</td><td>Annuelle</td><td>imf.org/-/media/CR/2025/1civea2025002</td></tr>
+        <tr><td><strong>African Business Magazine</strong></td><td>Analyse AfDB MEO 2026 · CEDEAO · Tangier</td><td>Événementielle</td><td>african.business (avr. 2026)</td></tr>
+        <tr><td><strong>INS Côte d\'Ivoire</strong></td><td>Statistiques socio-économiques</td><td>Variable</td><td>ins.ci</td></tr>
+      </tbody>
+    </table>
+
+    <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-left:3px solid var(--blue);border-radius:0 6px 6px 0;padding:14px;margin-top:14px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin-bottom:6px">📐 Méthodologie — Subvention implicite carburant</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6">
+        La subvention implicite = différence entre le prix plafond officiel (820 FCFA/L super) et le prix de marché équitable estimé. Ce dernier est calculé comme : <code style="background:var(--bg3);padding:1px 6px;border-radius:3px">MOPS Singapour + fret Golfe→Abidjan + marges SIR/distributeurs</code>. Le MOPS est approximé par la formule <code>$0.077 + $0.0102 × Brent</code>. Le fret Abidjan est estimé à $0.08–0.12/L (cape route). Les volumes de consommation nationale (1.5–2 Mds L/an) sont estimés faute de données DGH publiées. <strong>Données officielles MFB/PETROCI requises pour affiner.</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<!-- ═══ PANEL : COMPARAISON CEDEAO ═══ -->
+<div class="panel" id="panel-ecowas">
+
+  <!-- KEY FACTS BOX -->
+  <div class="info-box" style="margin-bottom:16px;border-left:3px solid #f97316">
+    <h3 style="color:#f97316">📌 Faits clés — Impact du conflit du Moyen-Orient sur l'Afrique (sources officielles)</h3>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:10px">
+      <div style="background:var(--bg3);border-radius:6px;padding:10px;text-align:center">
+        <div style="font-size:9px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Impact croissance<br>Afrique (>6 mois)</div>
+        <div style="font-size:22px;font-weight:700;color:#ef4444;font-family:var(--mono)">–1.5%</div>
+        <div style="font-size:10px;color:var(--text2)">BAD MEO 2026</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:6px;padding:10px;text-align:center">
+        <div style="font-size:9px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Monnaies africaines<br>dépréciées</div>
+        <div style="font-size:22px;font-weight:700;color:#ef4444;font-family:var(--mono)">29</div>
+        <div style="font-size:10px;color:var(--text2)">AfDB avr. 2026</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:6px;padding:10px;text-align:center">
+        <div style="font-size:9px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Dette pub. Afrique<br>2024</div>
+        <div style="font-size:22px;font-weight:700;color:#f59e0b;font-family:var(--mono)">$1.9tn</div>
+        <div style="font-size:10px;color:var(--text2)">31% recettes</div>
+      </div>
+      <div style="background:rgba(249,115,22,.1);border-radius:6px;padding:10px;text-align:center;border:1px solid rgba(249,115,22,.3)">
+        <div style="font-size:9px;text-transform:uppercase;color:#f97316;margin-bottom:4px;font-weight:700">CIV parmi…</div>
+        <div style="font-size:22px;font-weight:700;color:#ef4444;font-family:var(--mono)">12</div>
+        <div style="font-size:10px;color:var(--text2)">pays FMI spreads<br>+ dette critiques</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:6px;padding:10px;text-align:center">
+        <div style="font-size:9px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Imports Afrique<br>depuis M-O</div>
+        <div style="font-size:22px;font-weight:700;color:#f59e0b;font-family:var(--mono)">15.8%</div>
+        <div style="font-size:10px;color:var(--text2)">AfDB–UNDP–CEA</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:6px;padding:10px;text-align:center">
+        <div style="font-size:9px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Pétrole >50%<br>depuis Golfe</div>
+        <div style="font-size:22px;font-weight:700;color:#f59e0b;font-family:var(--mono)">15+</div>
+        <div style="font-size:10px;color:var(--text2)">pays africains</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
+      <div style="padding:10px 14px;background:rgba(249,115,22,.07);border-radius:6px;color:var(--text2);line-height:1.6;border-left:2px solid #f97316">
+        <strong style="color:#f97316">IEA–FMI–Banque Mondiale (1 avr. 2026) :</strong><br>
+        "L'une des plus grandes pénuries d'approvisionnement de l'histoire du marché énergétique mondial. L'impact est <strong>substantiel, mondial et hautement asymétrique</strong>, affectant de manière disproportionnée les importateurs d'énergie, en particulier les pays à faible revenu."
+      </div>
+      <div style="padding:10px 14px;background:rgba(249,115,22,.07);border-radius:6px;color:var(--text2);line-height:1.6;border-left:2px solid #f59e0b">
+        <strong style="color:#f59e0b">AfDB–UA–PNUD–CEA (2 avr. 2026, Tanger) :</strong><br>
+        "L'escalade continue du conflit aggrave l'instabilité mondiale, avec des implications sérieuses pour les marchés énergétiques, la sécurité alimentaire et la résilience économique, particulièrement en Afrique." — Mahamoud Ali Youssouf, Président CUA
+      </div>
+      <div style="padding:10px 14px;background:rgba(59,130,246,.06);border-radius:6px;color:var(--text2);line-height:1.6;border-left:2px solid #3b82f6">
+        <strong style="color:#3b82f6">Ecofin Agency (30 mars 2026) — CIV :</strong><br>
+        BAD prévisions (6.5%) calculées sur Brent $68–69. CIV est parmi <strong>12 pays FMI</strong> à risque de spreads + service de la dette simultanément élevés. "La marge pour absorber les chocs est limitée."
+      </div>
+      <div style="padding:10px 14px;background:rgba(16,185,129,.05);border-radius:6px;color:var(--text2);line-height:1.6;border-left:2px solid #10b981">
+        <strong style="color:#10b981">UNDP (2 avr. 2026) :</strong><br>
+        "Avec les bons choix de politiques, les outils de financement et la volonté politique, l'Afrique peut surmonter ce choc et émerger <strong>plus résiliente, plus autonome</strong>." — Ahunna Eziakonwa, Secrétaire générale adjointe ONU
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON CHART -->
+  <div class="chart-grid" style="margin-bottom:16px">
+    <div class="chart-box">
+      <div class="chart-title">CEDEAO — Exposition au choc Hormuz (importateurs vs exportateurs)</div>
+      <div class="chart-sub">Score de risque : exposition pétrolière nette + vulnérabilité alimentaire + marge fiscale (estimations)</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chartEcowasRisk"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">CEDEAO — Croissance PIB réel 2026 (prévisions BAD vs risque Hormuz)</div>
+      <div class="chart-sub">% · BAD MEO janv. 2026 (avant choc) · Révision IMF attendue 14 avr.</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chartEcowasGrowth"></canvas></div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="info-box">
+    <h3>🌍 Tableau comparatif CEDEAO — Impact crise Hormuz</h3>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">
+      Sources : BAD Macroeconomic Performance and Outlook 2026 · Ecofin Agency · AfDB–AU–UNDP–UNECA (Tanger, 2 avr. 2026) · Business & Financial Times · Zero Carbon Analytics · IMF/WB Joint Statement (1 avr. 2026).
+    </p>
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>Pays</th>
+          <th>Statut pétrolier</th>
+          <th>Croissance 2026<br>(prév. BAD)</th>
+          <th>Exposition Hormuz</th>
+          <th>Impact énergie</th>
+          <th>Impact engrais</th>
+          <th>Risque monétaire</th>
+          <th>Mesures adoptées</th>
+          <th>Risque global</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td><strong>🇨🇮 Côte d\'Ivoire</strong></td>
+          <td>Import. net<br>(prod. partielle)</td>
+          <td class="val" style="color:#10b981">6.5%</td>
+          <td style="color:#f59e0b">Modérée–forte<br>(~45% Golfe)</td>
+          <td style="color:#f59e0b">Gel prix pompe<br>(820/675 FCFA)</td>
+          <td style="color:#ef4444">Cacao/caoutchouc<br>urée +46%</td>
+          <td style="color:#10b981">FCFA/€ ancrage<br>UEMOA stable</td>
+          <td>Gel prix · SIR</td>
+          <td style="color:#f59e0b">🟡 MODÉRÉ</td>
+        </tr>
+        <tr>
+          <td><strong>🇳🇬 Nigeria</strong></td>
+          <td>Exportateur<br>(limité)</td>
+          <td class="val" style="color:#10b981">3.8%</td>
+          <td style="color:#10b981">Faible directe<br>(producteur)</td>
+          <td style="color:#f59e0b">Bénéfice export<br>mais raff. importée</td>
+          <td style="color:#f59e0b">Agriculture<br>dépendante</td>
+          <td style="color:#ef4444">Naira fragile<br>–29 pays dépréciés</td>
+          <td>Dangoté raff.<br>+livraisons brut</td>
+          <td style="color:#f59e0b">🟡 MIXTE</td>
+        </tr>
+        <tr>
+          <td><strong>🇬🇭 Ghana</strong></td>
+          <td>Import. net<br>(prod. marginale)</td>
+          <td class="val" style="color:#10b981">4.5%</td>
+          <td style="color:#ef4444">Forte<br>(cacao + import.)</td>
+          <td style="color:#ef4444">Restructuration<br>dette + choc prix</td>
+          <td style="color:#ef4444">Cacao + alim.<br>exposition forte</td>
+          <td style="color:#ef4444">Cedi vulnérable<br>post-défaut 2022</td>
+          <td>Programme IMF<br>en cours</td>
+          <td style="color:#ef4444">🔴 ÉLEVÉ</td>
+        </tr>
+        <tr>
+          <td><strong>🇸🇳 Sénégal</strong></td>
+          <td>Import. net<br>(gas offshore)</td>
+          <td class="val" style="color:#10b981">8.5%</td>
+          <td style="color:#f59e0b">Modérée</td>
+          <td style="color:#f59e0b">Appel réduction<br>consommation</td>
+          <td style="color:#f59e0b">Agriculture<br>dépendante urée</td>
+          <td style="color:#f59e0b">FCFA/€ ancrage<br>stable</td>
+          <td>Mesures sobriété<br>énergétique</td>
+          <td style="color:#f59e0b">🟡 MODÉRÉ</td>
+        </tr>
+        <tr>
+          <td><strong>🇲🇱 Mali</strong></td>
+          <td>Import. total<br>enclavé</td>
+          <td class="val" style="color:#f59e0b">5.1%</td>
+          <td style="color:#ef4444">Très forte<br>(ports transit CIV)</td>
+          <td style="color:#ef4444">Surcoût transit<br>+40% fret</td>
+          <td style="color:#ef4444">Forte dépendance<br>inputs importés</td>
+          <td style="color:#f59e0b">FCFA/€ ancrage<br>mais sanctions</td>
+          <td>Ports Abidjan<br>/ San Pedro</td>
+          <td style="color:#ef4444">🔴 ÉLEVÉ</td>
+        </tr>
+        <tr>
+          <td><strong>🇧🇫 Burkina Faso</strong></td>
+          <td>Import. total<br>enclavé</td>
+          <td class="val" style="color:#f59e0b">4.8%</td>
+          <td style="color:#ef4444">Très forte<br>(pas d'accès mer)</td>
+          <td style="color:#ef4444">Transit dépend<br>ports CIV/Ghana</td>
+          <td style="color:#ef4444">Agriculture sous<br>stress sécuritaire</td>
+          <td style="color:#ef4444">FCFA + sanctions<br>AES</td>
+          <td>AES coordination<br>limitée</td>
+          <td style="color:#ef4444">🔴 ÉLEVÉ</td>
+        </tr>
+        <tr>
+          <td><strong>🇹🇬 Togo</strong></td>
+          <td>Import. total</td>
+          <td class="val" style="color:#10b981">5.9%</td>
+          <td style="color:#f59e0b">Modérée<br>(port hub)</td>
+          <td style="color:#f59e0b">Coûts transport<br>en hausse</td>
+          <td style="color:#f59e0b">Phosphates export.<br>exposition partielle</td>
+          <td style="color:#10b981">FCFA/€ ancrage</td>
+          <td>Port Lomé<br>stratégique</td>
+          <td style="color:#f59e0b">🟡 MODÉRÉ</td>
+        </tr>
+        <tr>
+          <td><strong>🇧🇯 Bénin</strong></td>
+          <td>Import. total</td>
+          <td class="val" style="color:#10b981">7.0%</td>
+          <td style="color:#f59e0b">Modérée</td>
+          <td style="color:#f59e0b">Import. dépendant<br>fret hausse</td>
+          <td style="color:#f59e0b">Coton agriculture<br>engrais exposé</td>
+          <td style="color:#10b981">FCFA/€ ancrage</td>
+          <td>Programme IMF</td>
+          <td style="color:#10b981">🟢 LIMITÉ</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ECOFIN KEY INSIGHT BOX -->
+    <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-left:3px solid #3b82f6;border-radius:0 6px 6px 0;padding:14px;margin-top:14px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#3b82f6;margin-bottom:8px">
+        🔍 Ecofin Agency — Analyse CIV spécifique (30 mars 2026)
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px;color:var(--text2);line-height:1.6">
+        <div>
+          <strong style="color:var(--text)">Atouts :</strong>
+          <ul style="padding-left:16px;margin-top:4px">
+            <li>Croissance projetée 6.5% (BAD, janv. 2026) — 1ère économie UEMOA</li>
+            <li>Inflation cible 2.4% — une des plus stables d'Afrique</li>
+            <li>Ancrage FCFA/€ — protection contre dépréciation monétaire</li>
+            <li>Programme IMF ($4.8 Mds, 2023-2026) — filet de sécurité</li>
+            <li>Production pétrolière offshore partielle — amortisseur naturel</li>
+            <li>Eurobond $1.75 Mds à 6.45% (mars 2025) — accès marché préservé</li>
+          </ul>
+        </div>
+        <div>
+          <strong style="color:#ef4444">Vulnérabilités :</strong>
+          <ul style="padding-left:16px;margin-top:4px">
+            <li>Prévisions BAD finalisées <em>avant</em> le choc Hormuz (janv. 2026)</li>
+            <li>Ratio service dette/recettes : 17.7% → seuil FMI 18%</li>
+            <li>"Marge pour absorber les chocs est limitée" (MFB officiel)</li>
+            <li>Double choc : pétrole +55% <em>et</em> cacao –65% simultanément</li>
+            <li>Révision IMF WEO 14 avr. 2026 : risque de downgrade</li>
+            <li>Gel prix = subvention implicite ~50 Mds FCFA/mois (Brent $109)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- UNDP/AfDB KEY MESSAGE -->
+    <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.2);border-left:3px solid #10b981;border-radius:0 6px 6px 0;padding:14px;margin-top:12px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#10b981;margin-bottom:6px">✅ Recommandations AfDB–UA–PNUD–CEA (Tanger, 2 avr. 2026)</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6">
+        Les institutions recommandent aux gouvernements africains :
+        (1) <strong>Diversification des sources d'énergie</strong> — solaire, hydroélectrique, gaz domestique ;
+        (2) <strong>Coopération régionale CEDEAO</strong> sur la logistique et le stockage stratégique ;
+        (3) <strong>Ciblage social des subventions</strong> plutôt que subventions universelles onéreuses ;
+        (4) <strong>Mobilisation des partenaires</strong> FMI/Banque Mondiale pour l'espace budgétaire ;
+        (5) <strong>Accélération de la transformation locale</strong> du cacao pour réduire la dépendance aux cours mondiaux.
+        <br><br>
+        Pour la Côte d\'Ivoire spécifiquement : la stratégie "hub régional" (Abidjan + San Pedro) place la CI en position pivot pour toute la CEDEAO enclavée (Mali, Burkina Faso, Niger) — ce rôle est à la fois une opportunité et une responsabilité accrue en période de crise.
+      </div>
+
+      <!-- AfDB KEY FINDINGS BOX -->
+      <div style="background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-left:3px solid #ef4444;border-radius:0 6px 6px 0;padding:14px;margin-top:12px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#ef4444;margin-bottom:8px">🔴 Pays africains les plus vulnérables — AfDB MEO 2026 · Tanger (2 avr. 2026)</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+          Pays à risque élevé combiné (service dette + imports énergie/aliments + faibles réserves) :
+          <strong>Sénégal · Soudan · Cap-Vert · Soudan du Sud · Gambie.</strong><br>
+          <strong style="color:#10b981">Bénéficiaires potentiels :</strong> Nigeria (prix élevés + raffinerie Dangote · 7 cargaisons brut prévues mai) · Mozambique (LNG + port Maputo).<br>
+          <strong>29 monnaies africaines</strong> ont faibli depuis le début du conflit → coût service dette extérieure en hausse.<br>
+          Perturbations <strong>engrais (LNG→ammoniac→urée) potentiellement plus dommageables</strong> que le choc pétrolier pour pays agricoles.<br>
+          Saison de plantation <strong>mars–mai 2026</strong> = fenêtre critique — réduction des applications d'engrais risque de peser sur récoltes H2 2026.<br>
+          <strong>AfCFTA</strong> identifié comme levier clé de résilience commerciale régionale (moyen terme).<br>
+          "Ce moment exige une pensée structurelle aux côtés d'un soulagement immédiat" — <em>Claver Gatete, Secrétaire exécutif UNECA.</em>
+        </div>
+      </div>
+
+      <!-- 3 HORIZONS D'ACTION -->
+      <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.2);border-left:3px solid #10b981;border-radius:0 6px 6px 0;padding:14px;margin-top:12px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#10b981;margin-bottom:10px">✅ Cadre d'action AfDB–UA–PNUD–CEA — 3 horizons temporels</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:11px;color:var(--text2)">
+          <div style="background:rgba(239,68,68,.06);border-radius:6px;padding:10px">
+            <div style="font-weight:700;color:#ef4444;margin-bottom:6px;font-size:10px;text-transform:uppercase">⚡ Immédiat (0–3 mois)</div>
+            <ul style="padding-left:14px;line-height:1.8">
+              <li>Protéger les ménages des hausses énergie+aliments</li>
+              <li>Stabiliser l'offre carburant, nourriture et engrais</li>
+              <li>Mobiliser partenaires dev. pour espace budgétaire</li>
+              <li><strong>CIV : gel prix à la pompe</strong> + évaluer coût fiscal réel</li>
+            </ul>
+          </div>
+          <div style="background:rgba(245,158,11,.06);border-radius:6px;padding:10px">
+            <div style="font-weight:700;color:#f59e0b;margin-bottom:6px;font-size:10px;text-transform:uppercase">🔧 Moyen terme (3–18 mois)</div>
+            <ul style="padding-left:14px;line-height:1.8">
+              <li>Renforcer sécurité énergétique (solaire, hydro)</li>
+              <li>Protection sociale ciblée vs subventions univ.</li>
+              <li>Commerce régional via <strong>AfCFTA</strong></li>
+              <li><strong>CIV : transformation locale cacao</strong></li>
+            </ul>
+          </div>
+          <div style="background:rgba(59,130,246,.06);border-radius:6px;padding:10px">
+            <div style="font-weight:700;color:#3b82f6;margin-bottom:6px;font-size:10px;text-transform:uppercase">🏗️ Long terme (18+ mois)</div>
+            <ul style="padding-left:14px;line-height:1.8">
+              <li>Mobilisation ressources intérieures africaines</li>
+              <li>Mécanisme stabilité financière africain</li>
+              <li>Souveraineté énergétique + alimentaire</li>
+              <li><strong>CIV : hub régional</strong> Abidjan–San Pedro</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-size:11px;color:var(--text3);font-style:italic">
+          "L'Afrique peut continuer à absorber ces chocs, ou prendre des mesures décisives pour réduire sa dépendance aux chaînes d'approvisionnement externes." — UNDP (Ahunna Eziakonwa, Dir. Régionale Afrique)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>🇨🇮 <strong>Côte d\'Ivoire — Tableau de Bord Crise Hormuz</strong> · WB EFI/EAP/EEAM2 · Usage interne</span>
+  <span id="footerStatus" style="color:var(--text3);font-size:11px">Données : chargement…</span>
+  <span>Sources : DGH · CCC · FAO · Banque Mondiale · Kpler · Investing.com</span>
+</div>
+
+<script>
+// ── DATA SEED (avril 2026) ──────────────────────────────────────
+const SEED = {
+  brent: 109.03, wti: 111.54, transits: 5,
+  fao: 128.5, riz: 346, uree: 700,
+  super_fcfa: 820, gasoil_fcfa: 675, lampant_fcfa: 705,
+  gaz6: 2000, gaz12: 5200,
+  cacao_world: 4200, cacao_civ: 1200,
+  precrisis_brent: 68,
+};
+
+const baseOpts = () => ({
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false }, tooltip: { backgroundColor: '#16232f', titleColor: '#d4e4f4', bodyColor: '#8fa8be', borderColor: '#1d2e3e', borderWidth: 1 } },
+  scales: {
+    x: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#5a7a92' } },
+    y: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#5a7a92' } }
+  }
+});
+
+
+// ── TABS ──────────────────────────────────────────────────────────
+// ── ECOWAS Charts ────────────────────────────────────────────────
+function renderEcowasCharts() {
+  if (!document.getElementById('chartEcowasRisk') || document.getElementById('chartEcowasRisk')._rendered) return;
+  document.getElementById('chartEcowasRisk')._rendered = true;
+
+  // Risk exposure chart
+  new Chart(document.getElementById('chartEcowasRisk'), {
+    type: 'bar',
+    data: {
+      labels: ['🇧🇫 Burkina\nFaso', '🇲🇱 Mali', '🇬🇭 Ghana', '🇨🇮 Côte\ndIvoire', '🇸🇳 Sénégal', '🇹🇬 Togo', '🇧🇯 Bénin', '🇳🇬 Nigeria'],
+      datasets: [
+        { label: 'Énergie', data: [9,9,7,5,5,5,4,3], backgroundColor: 'rgba(239,68,68,.7)', borderColor:'#ef4444', borderWidth:1, borderRadius:3, stack:'s' },
+        { label: 'Alimentaire+Engrais', data: [8,8,7,6,6,5,5,5], backgroundColor: 'rgba(245,158,11,.7)', borderColor:'#f59e0b', borderWidth:1, borderRadius:3, stack:'s' },
+        { label: 'Fiscal+Monétaire', data: [7,7,9,4,4,4,3,6], backgroundColor: 'rgba(249,115,22,.5)', borderColor:'#f97316', borderWidth:1, borderRadius:3, stack:'s' },
+      ]
+    },
+    options: { ...baseOpts(), plugins:{...baseOpts().plugins, legend:{display:true,labels:{color:'#8fa8be',boxWidth:10,font:{size:10}}}},
+      scales: { ...baseOpts().scales, x:{...baseOpts().scales.x,stacked:true}, y:{...baseOpts().scales.y,stacked:true,max:30,title:{display:true,text:'Score de risque (0=faible, 30=extrême)',color:'#5a7a92'}} }
+    }
+  });
+
+  // Growth projections
+  new Chart(document.getElementById('chartEcowasGrowth'), {
+    type: 'bar',
+    data: {
+      labels: ['🇧🇯 Bénin', '🇸🇳 Sénégal', '🇨🇮 Côte\ndIvoire', '🇹🇬 Togo', '🇲🇱 Mali', '🇧🇫 Burkina', '🇬🇭 Ghana', '🇳🇬 Nigeria'],
+      datasets: [
+        { label: 'Croissance 2026 prév. BAD (janv.)', data: [7.0,8.5,6.5,5.9,5.1,4.8,4.5,3.8], backgroundColor: 'rgba(16,185,129,.6)', borderColor:'#10b981', borderWidth:1, borderRadius:3 },
+        { label: 'Révision risque Hormuz (estimée)', data: [-0.5,-0.6,-0.8,-0.5,-1.2,-1.3,-1.5,-0.3], backgroundColor: 'rgba(239,68,68,.5)', borderColor:'#ef4444', borderWidth:1, borderRadius:3 },
+      ]
+    },
+    options: { ...baseOpts(), plugins:{...baseOpts().plugins, legend:{display:true,labels:{color:'#8fa8be',boxWidth:10,font:{size:10}}}},
+      scales: { ...baseOpts().scales, y:{...baseOpts().scales.y,title:{display:true,text:'% PIB réel',color:'#5a7a92'},
+        ticks:{callback:v=>v+'%'}
+      }}
+    }
+  });
+}
+
+function switchTab(id) {
+  const tabMap = {apercu:0, energie:1, agriculture:2, fiscal:3, social:4, ecowas:5, sources:6};
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i === (tabMap[id]??0)));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + id));
+  setTimeout(renderCharts, 50); if(id==='ecowas') setTimeout(renderEcowasCharts, 100);
+}
+
+// ── DATE & DAY COUNTER ───────────────────────────────────────────
+(function(){
+  const crisis = new Date('2026-02-28T00:00:00Z');
+  const now = new Date();
+  const day = Math.floor((now - crisis) / 86400000) + 1;
+  const mois = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+  const ds = now.getDate() + ' ' + mois[now.getMonth()] + ' ' + now.getFullYear();
+  const el = document.getElementById('dayCounter'); if(el) el.textContent = 'Jour ' + day;
+  const ad = document.getElementById('autoDate'); if(ad) ad.textContent = ds;
+  const sd = document.getElementById('sitrepDate'); if(sd) sd.textContent = ds;
+  const badge = document.getElementById('sitrepDayBadge'); if(badge) badge.textContent = 'Jour ' + day + ' · ' + ds;
+})();
+
+// ── RISK MATRIX ───────────────────────────────────────────────────
+function updateRiskMatrix(b, fao) {
+  const setR = (id, level, val) => {
+    const el = document.getElementById(id); if(!el) return;
+    el.className = 'risk-pill risk-' + level;
+    const v = document.getElementById('rv' + id.replace('risk','')); if(v && val) v.textContent = val;
+  };
+  const brent = b || SEED.brent;
+  setR('riskEnergie',    brent > 120 ? 'red' : brent > 90 ? 'amber' : 'green', '$' + brent.toFixed(0) + '/bbl');
+  setR('riskFiscal',     brent > 100 ? 'red' : 'amber', 'Gel prix');
+  setR('riskCacao',      'red', '~$4 200/t');
+  setR('riskLogistique', 'amber', '+40%');
+  setR('riskAlimentaire',(fao||SEED.fao) > 130 ? 'red' : 'amber', (fao||SEED.fao).toFixed(1));
+  setR('riskSocial',     'amber', '37.5%');
+  // Alert banner
+  if (brent > 120) {
+    const b2 = document.getElementById('alertBanner');
+    const bt = document.getElementById('alertBannerText');
+    if(b2 && bt) { bt.textContent = '🔴 ALERTE : Brent dépasse $120 — révision des prix carburants CIV probable. Coût fiscal subvention critique.'; b2.style.display = 'block'; }
+  }
+}
+updateRiskMatrix(SEED.brent, SEED.fao);
+
+// ── CHART DEFAULTS ────────────────────────────────────────────────
+Chart.defaults.color = '#5a7a92';
+Chart.defaults.font.family = "'Libre Franklin', system-ui, sans-serif";
+Chart.defaults.font.size = 11;
+
+
+let chartsRendered = false;
+function renderCharts() {
+  if (chartsRendered) return; chartsRendered = true;
+
+  // Brent Chart
+  if (document.getElementById('chartBrent')) {
+    new Chart(document.getElementById('chartBrent'), {
+      type: 'line',
+      data: {
+        labels: ['Jan 26','Fév 26','28 Fév','5 Mar','12 Mar','19 Mar','26 Mar','31 Mar','5 Avr'],
+        datasets: [{
+          label: 'Brent ($/bbl)',
+          data: [73, 78, 68, 90, 112, 108, 105, 107.96, 109.03],
+          borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,.08)',
+          borderWidth: 2, fill: true, tension: .3, pointRadius: [2,2,4,3,5,3,3,3,5],
+          pointBackgroundColor: '#f97316'
+        }]
+      },
+      options: { ...baseOpts(), plugins: { ...baseOpts().plugins,
+        annotation: { annotations: {
+          fermeture: { type:'line', xMin:2, xMax:2, borderColor:'rgba(239,68,68,.5)', borderWidth:1.5, borderDash:[4,3], label:{ content:'Fermeture Hormuz', display:true, position:'start', font:{size:9}, color:'#ef4444', backgroundColor:'transparent' } }
+        }}
+      },
+      scales: { ...baseOpts().scales, y: { ...baseOpts().scales.y, title:{display:true, text:'USD/bbl', color:'#5a7a92'} } }
+      }
+    });
+  }
+
+  // Carburants CIV Chart
+  if (document.getElementById('chartCarburants')) {
+    new Chart(document.getElementById('chartCarburants'), {
+      type: 'bar',
+      data: {
+        labels: ['Super\nsans plomb', 'Gasoil', 'Pétrole\nlampant', 'Butane 6kg\n(÷3 FCFA)', 'DDO\n(Abidjan)'],
+        datasets: [
+          { label: 'Prix actuel avr. 2026 (FCFA)', data: [820, 675, 705, 667, 872], backgroundColor: 'rgba(16,185,129,.7)', borderColor: '#10b981', borderWidth: 1, borderRadius: 4 },
+          { label: 'Prix équitable estimé (Brent $109)', data: [875, 720, 750, 700, 930], backgroundColor: 'rgba(239,68,68,.4)', borderColor: '#ef4444', borderWidth: 1, borderRadius: 4 }
+        ]
+      },
+      options: { ...baseOpts(), plugins: { ...baseOpts().plugins, legend: { display:true, labels:{color:'#8fa8be', boxWidth:12, font:{size:10}} } },
+        scales: { ...baseOpts().scales, y: { ...baseOpts().scales.y, title:{display:true,text:'FCFA/litre',color:'#5a7a92'} } }
+      }
+    });
+  }
+
+  // Subvention implicite
+  if (document.getElementById('chartSubvention')) {
+    new Chart(document.getElementById('chartSubvention'), {
+      type: 'bar',
+      data: {
+        labels: ['A — Résolution\n($75)', 'B — Statu quo\n($109)', 'C — Dégradation\n($120)', 'D — Extrême\n($130+)'],
+        datasets: [{
+          label: 'Coût subvention implicite (Mds FCFA/mois)',
+          data: [-15, 50, 85, 140],
+          backgroundColor: ['rgba(16,185,129,.7)', 'rgba(245,158,11,.7)', 'rgba(249,115,22,.7)', 'rgba(239,68,68,.8)'],
+          borderColor: ['#10b981','#f59e0b','#f97316','#ef4444'],
+          borderWidth: 1, borderRadius: 4
+        }]
+      },
+      options: { ...baseOpts(),
+        scales: { ...baseOpts().scales, y: { ...baseOpts().scales.y, title:{display:true,text:'Mds FCFA/mois',color:'#5a7a92'} } }
+      }
+    });
+  }
+
+  // SIR Chart
+  if (document.getElementById('chartSIR')) {
+    new Chart(document.getElementById('chartSIR'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Golfe (exposé)', 'Nigeria/AOC', 'Production nationale', 'Autres'],
+        datasets: [{ data: [45, 27, 15, 13],
+          backgroundColor: ['rgba(239,68,68,.8)', 'rgba(16,185,129,.7)', 'rgba(59,130,246,.7)', 'rgba(245,158,11,.6)'],
+          borderColor: ['#ef4444','#10b981','#3b82f6','#f59e0b'], borderWidth: 1 }]
+      },
+      options: { responsive:true, maintainAspectRatio:false,
+        plugins: { legend:{ display:true, position:'bottom', labels:{color:'#8fa8be', boxWidth:10, font:{size:10}, padding:8} }, tooltip:{backgroundColor:'#16232f',titleColor:'#d4e4f4',bodyColor:'#8fa8be'} }
+      }
+    });
+  }
+
+  // Cacao World Chart
+  if (document.getElementById('chartCacao')) {
+    new Chart(document.getElementById('chartCacao'), {
+      type: 'line',
+      data: {
+        labels: ['Jan 24','Avr 24','Juil 24','Oct 24','Déc 24','Jan 25','Avr 25','Juil 25','Oct 25','Jan 26','Fév 26','Mars 26'],
+        datasets: [{
+          label: 'Cacao mondial ($/t)',
+          data: [4200, 7500, 9200, 11000, 12000, 9500, 7000, 5500, 4800, 5443, 4000, 4200],
+          borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,.08)',
+          borderWidth: 2, fill: true, tension: .4, pointRadius: 2
+        }]
+      },
+      options: { ...baseOpts(), scales: { ...baseOpts().scales, y: { ...baseOpts().scales.y, title:{display:true,text:'USD/tonne',color:'#5a7a92'} } } }
+    });
+  }
+
+  // Bord champ
+  if (document.getElementById('chartBordChamp')) {
+    new Chart(document.getElementById('chartBordChamp'), {
+      type: 'bar',
+      data: {
+        labels: ['Oct 25\n(campagne)', 'Nov 25', 'Déc 25', 'Jan 26', 'Fév 26', 'Mars 26\n(révisé)'],
+        datasets: [{
+          label: 'Prix bord champ CCC (FCFA/kg)',
+          data: [2800, 2800, 2800, 2800, 2800, 1200],
+          backgroundColor: ['rgba(16,185,129,.6)','rgba(16,185,129,.6)','rgba(16,185,129,.6)','rgba(245,158,11,.6)','rgba(245,158,11,.6)','rgba(239,68,68,.8)'],
+          borderColor: ['#10b981','#10b981','#10b981','#f59e0b','#f59e0b','#ef4444'],
+          borderWidth: 1, borderRadius: 4
+        }]
+      },
+      options: { ...baseOpts(), scales: { ...baseOpts().scales, y: { ...baseOpts().scales.y, title:{display:true,text:'FCFA/kg',color:'#5a7a92'}, min:0, max:3200 } } }
+    });
+  }
+
+  // Urée
+  if (document.getElementById('chartUree')) {
+    new Chart(document.getElementById('chartUree'), {
+      type: 'line',
+      data: {
+        labels: ['Jan 26','Fév 26','28 Fév','Mar S1','Mar S2','Fin Mar','Avr 26'],
+        datasets: [{
+          label: 'Urée FOB Égypte ($/MT)',
+          data: [350, 420, 450, 540, 620, 700, 720],
+          borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,.08)',
+          borderWidth: 2, fill: true, tension: .3, pointRadius: [2,2,4,3,3,5,3]
+        }]
+      },
+      options: { ...baseOpts(), scales: { ...baseOpts().scales, y: { ...baseOpts().scales.y, title:{display:true,text:'USD/MT',color:'#5a7a92'} } } }
+    });
+  }
+
+  // Revenu planteur
+  if (document.getElementById('chartRevenu')) {
+    new Chart(document.getElementById('chartRevenu'), {
+      type: 'bar',
+      data: {
+        labels: ['Référence\n2024', 'Scén. actuel\n(avr. 2026)', 'Scén. résolution\nHormuz', 'Scén. crise\nprolongée'],
+        datasets: [{
+          label: 'Revenu annuel estimé / planteur (milliers FCFA)',
+          data: [850, 280, 420, 190],
+          backgroundColor: ['rgba(16,185,129,.7)', 'rgba(239,68,68,.8)', 'rgba(245,158,11,.7)', 'rgba(239,68,68,.5)'],
+          borderColor: ['#10b981','#ef4444','#f59e0b','#ef4444'], borderWidth: 1, borderRadius: 4
+        }]
+      },
+      options: { ...baseOpts(), scales: { ...baseOpts().scales, y: { ...baseOpts().scales.y, title:{display:true,text:'Milliers FCFA/an',color:'#5a7a92'} } } }
+    });
+  }
+
+  // Fiscal Scénario
+  if (document.getElementById('chartFiscalScenario')) {
+    new Chart(document.getElementById('chartFiscalScenario'), {
+      type: 'bar',
+      data: {
+        labels: ['A - Résolution\nHormuz $75', 'B - Statu quo\n$109', 'C - Dégradation\n$120', 'D - Extrême\n$130+'],
+        datasets: [
+          { label: 'Subvention implicite carburant (Mds FCFA/mois)', data: [-15, 50, 85, 140], backgroundColor: ['rgba(16,185,129,.7)','rgba(245,158,11,.7)','rgba(249,115,22,.7)','rgba(239,68,68,.8)'], borderColor:['#10b981','#f59e0b','#f97316','#ef4444'], borderWidth:1, borderRadius:4, stack:'a' },
+          { label: 'Impact cacao (perte recettes, Mds FCFA)', data: [30, 45, 45, 50], backgroundColor: 'rgba(100,100,100,.4)', borderColor: '#888', borderWidth:1, borderRadius:4, stack:'a' }
+        ]
+      },
+      options: { ...baseOpts(), plugins:{...baseOpts().plugins, legend:{display:true,labels:{color:'#8fa8be',boxWidth:12,font:{size:10}}}},
+        scales: { ...baseOpts().scales, x:{...baseOpts().scales.x, stacked:true}, y: { ...baseOpts().scales.y, stacked:true, title:{display:true,text:'Mds FCFA/mois',color:'#5a7a92'} } }
+      }
+    });
+  }
+
+  // Budget
+  if (document.getElementById('chartBudget')) {
+    new Chart(document.getElementById('chartBudget'), {
+      type: 'bar',
+      data: {
+        labels: ['Déficit budget\n(% PIB)', 'Recettes fiscales\n(% PIB)', 'Dette pub.\n(% PIB)', 'Pression\nsociale (index)'],
+        datasets: [
+          { label: 'Cible 2026 (prog. FMI)', data: [3.6, 15.9, 55, 40], backgroundColor: 'rgba(59,130,246,.5)', borderColor:'#3b82f6', borderWidth:1, borderRadius:4 },
+          { label: 'Scén. B actuel (Brent $109)', data: [4.8, 14.5, 57, 60], backgroundColor: 'rgba(249,115,22,.6)', borderColor:'#f97316', borderWidth:1, borderRadius:4 }
+        ]
+      },
+      options: { ...baseOpts(), plugins:{...baseOpts().plugins,legend:{display:true,labels:{color:'#8fa8be',boxWidth:12,font:{size:10}}}},
+        scales: { ...baseOpts().scales, y:{ ...baseOpts().scales.y, title:{display:true,text:'% PIB',color:'#5a7a92'} } }
+      }
+    });
+  }
+
+  // KPI updates
+  document.getElementById('footerStatus').textContent = 'Données : actualisées — Brent $' + SEED.brent + ' · FAO ' + SEED.fao + ' pts · 5 avr 2026';
+}
+
+// ── AUTO-SAVE SITREP ─────────────────────────────────────────────
+['sitrepGouv','sitrepPetrole','sitrepCacao','sitrepFiscal'].forEach(id => {
+  const el = document.getElementById(id); if(!el) return;
+  const saved = localStorage.getItem('civ_' + id); if(saved) el.innerHTML = saved;
+  let t;
+  el.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => localStorage.setItem('civ_' + id, el.innerHTML), 800); });
+  el.addEventListener('focus', () => { el.style.borderLeftColor = 'rgba(239,68,68,.8)'; });
+  el.addEventListener('blur', () => { el.style.borderLeftColor = 'rgba(239,68,68,.3)'; localStorage.setItem('civ_' + id, el.innerHTML); });
+});
+
+// ── REFRESH ──────────────────────────────────────────────────────
+async function refreshData() {
+  const pill = document.getElementById('livePill');
+  if(pill) { pill.textContent = '↻ Chargement…'; }
+  try {
+    const r = await fetch('https://api.oilpriceapi.com/v1/prices/latest', { headers:{'Authorization':'Token demo'}, signal: AbortSignal.timeout(6000) });
+    if(r.ok) {
+      const j = await r.json();
+      const b = parseFloat(j?.data?.price);
+      if(b > 50 && b < 500) {
+        SEED.brent = b;
+        document.getElementById('kpiBrent').innerHTML = b.toFixed(2) + '<span class="kpi-unit"> $/bbl</span>';
+        updateRiskMatrix(b, SEED.fao);
+        if(pill) { pill.textContent = '● LIVE'; pill.style.color = '#10b981'; }
+        document.getElementById('footerStatus').textContent = '⚡ LIVE — Brent $' + b.toFixed(2) + '/bbl · ' + new Date().toLocaleTimeString('fr-FR');
+        return;
+      }
+    }
+  } catch(e) {}
+  if(pill) { pill.textContent = '● DONNÉES'; pill.style.color = ''; }
+}
+
+// Init
+setTimeout(renderCharts, 200);
+</script>
+</body>
+</html>
