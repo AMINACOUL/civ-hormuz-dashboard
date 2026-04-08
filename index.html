@@ -171,10 +171,10 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
 <div id="riskMatrix">
   <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-right:16px;flex-shrink:0">Matrice de Risque</div>
   <div class="risk-pill risk-red" id="riskEnergie" onclick="switchTab('energie')" title="Énergie">
-    <span class="risk-dot">●</span><span class="risk-label">Énergie</span><span class="risk-val" id="rvEnergie">109$/bbl</span>
+    <span class="risk-dot">●</span><span class="risk-label">Énergie</span><span class="risk-val" id="rvEnergie">$95/bbl</span>
   </div>
   <div class="risk-pill risk-red" id="riskFiscal" onclick="switchTab('fiscal')" title="Fiscalité">
-    <span class="risk-dot">●</span><span class="risk-label">Fiscal</span><span class="risk-val" id="rvFiscal">Gel prix</span>
+    <span class="risk-dot">●</span><span class="risk-label">Fiscal</span><span class="risk-val" id="rvFiscal">Scén. A</span>
   </div>
   <div class="risk-pill risk-red" id="riskCacao" onclick="switchTab('agriculture')" title="Cacao">
     <span class="risk-dot">●</span><span class="risk-label">Cacao</span><span class="risk-val" id="rvCacao">~$4 200/t</span>
@@ -216,6 +216,7 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
       <div style="display:flex;align-items:baseline;gap:10px;margin-top:4px">
         <span id="scoreComposite" style="font-size:48px;font-weight:900;font-family:var(--mono);color:#f97316">67</span>
         <span style="font-size:13px;color:var(--text3)">/100</span>
+        <span id="ceasefireBadge" style="background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3);padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700">🕊️ CESSEZ-LE-FEU 2 SEMAINES</span>
         <span id="scoreBadge" style="background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3);padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700">🟡 VIGILANCE ÉLEVÉE</span>
       </div>
       <div style="font-size:11px;color:var(--text3);margin-top:4px">Calculé à partir de 6 piliers · mis à jour automatiquement · <span id="scoreDate"></span></div>
@@ -239,7 +240,7 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
         <div style="font-size:10px;color:var(--text3)">/bbl · Brent</div>
       </div>
     </div>
-    <input type="range" id="brentSlider" min="60" max="150" value="109" step="1"
+    <input type="range" id="brentSlider" min="60" max="150" value="95" step="1"
       style="width:100%;accent-color:#f97316;height:6px;cursor:pointer"
       oninput="updateSimulator(this.value)">
     <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px">
@@ -423,7 +424,7 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
         </tr>
         <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
           <td style="padding:6px 4px;color:var(--text2)">Brent ($/bbl)</td>
-          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444" id="wl-brent">$109</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444" id="wl-brent" style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#2ec4b6">$95</td>
           <td style="padding:6px 4px;text-align:center;color:#ef4444">↑ +58%</td>
           <td style="padding:6px 4px;text-align:center;color:var(--text3)">$120</td>
         </tr>
@@ -485,26 +486,16 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
       <!-- MESURES GOUVERNEMENTALES -->
       <div class="sitrep-section full" style="background:rgba(16,185,129,.03)">
         <div class="sitrep-section-title"><span class="icon">🇨🇮</span>Mesures gouvernementales ivoiriennes</div>
-        <div class="sitrep-text" id="sitrepGouv" contenteditable="true">
-          <strong>Prix des carburants maintenus inchangés pour avril 2026</strong> (communiqué officiel DGH/Min. Mines &amp; Pétrole, 31 mars 2026) :
-          Super sans plomb <strong>820 FCFA/L</strong> · Gasoil <strong>675 FCFA/L</strong> · Pétrole lampant 705 FCFA/L.
-          Gaz butane : 6 kg = 2 000 FCFA · 12,5 kg = 5 200 FCFA · 15 kg = 6 965 FCFA.
-          Mécanisme d'ajustement automatique mensuel suspendu dans les faits pour protéger le pouvoir d'achat.
-          <strong style="color:#f59e0b">Coût fiscal croissant</strong> : chaque mois de gel représente un manque à gagner fiscal estimé à 30–80 Mds FCFA selon le niveau du Brent.
-          La <strong>raffinerie SIR</strong> (Abidjan) traite le brut importé — fortement exposée à la hausse des coûts d'approvisionnement.
-        </div>
+        <div class="sitrep-text" id="sitrepGouv" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(16,185,129,.5);padding-left:10px" title="Cliquer pour éditer">
+        <strong>Prix des carburants maintenus inchangés pour avril 2026</strong> (DGH/Min. Mines &amp; Pétrole, 31 mars 2026) : Super sans plomb <strong>820 FCFA/L</strong> · Gasoil <strong>675 FCFA/L</strong> · Pétrole lampant 705 FCFA/L. Gaz butane : 6 kg = 2 000 FCFA · 12,5 kg = 5 200 FCFA.<br><br><strong style="color:#10b981">🕊️ Impact cessez-le-feu (7 avr.) :</strong> Avec le Brent retombé à ~$95/bbl, le gel des prix à la pompe est maintenant <strong>moins coûteux</strong> et possiblement <strong>profitable</strong> pour le Trésor (marge ~75 FCFA/L vs prix équitable). Les décisions DGH de mai 2026 devront intégrer cette nouvelle réalité. <strong>Mais la restauration complète des flux Hormuz prendra des mois</strong> — EIA prévoit pas de retour aux niveaux pré-crise avant fin 2026.
+      </div>
       </div>
       <!-- PÉTROLE -->
       <div class="sitrep-section">
         <div class="sitrep-section-title"><span class="icon">⚡</span>Pétrole &amp; Géopolitique</div>
-        <div class="sitrep-text" id="sitrepPetrole" contenteditable="true">
-          Brent <strong>$109.03/bbl</strong> · WTI <strong>$111.54</strong> — inversion historique (WTI &gt; Brent pour la 1ère fois depuis 2020).
-          Brent +55% en mars 2026 — record depuis 1988.
-          <strong style="color:#ef4444">Deadline April 6 (Trump) :</strong> ultimatum pour réouverture Hormuz ou frappe sur puits de pétrole, Kharg Island.
-          Afrique de l'Ouest : –43% des exportations pétrolières du Golfe vers l'Afrique (4 semaines, Kpler).
-          IEA : 12 mbd perdus — pire crise énergétique mondiale depuis les chocs de 1973/1979.
-          <strong style="color:#14b8a6">Signal positif :</strong> CMA CGM 1er navire occidental à transiter Hormuz (5 avr).
-        </div>
+        <div class="sitrep-text" id="sitrepPetrole" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(16,185,129,.6);padding-left:10px;background:rgba(16,185,129,.03)" title="Cliquer pour éditer">
+        <strong style="color:#10b981">✅ CESSEZ-LE-FEU 2 SEMAINES — 7 AVR. 2026</strong><br>Trump a suspendu les frappes contre l'Iran pour 2 semaines. L'Iran ouvre Hormuz "sous coordination" de ses forces armées. Deal négocié par le Pakistan.<br><br>Brent <strong style="color:#10b981">~$95/bbl</strong> (–13%) · WTI ~$96/bbl (–14%) — plus grande chute depuis la Guerre du Golfe 1991. Avant l'annonce : WTI $114, Brent plus élevé.<br><br><strong style="color:#f59e0b">⚠ Prudence :</strong> EIA avertit : production OPEC+ ne reviendra pas aux niveaux pré-crise avant fin 2026. "Nous n'avons jamais vu le détroit rouvrir. La restauration complète prendra des mois." — Tristan Abbey, EIA. Iran facture $2M/navire. Cessez-le-feu fragile · négociations à Islamabad 10 avr.
+      </div>
       </div>
       <!-- CACAO + ENGRAIS -->
       <div class="sitrep-section">
@@ -521,23 +512,9 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
       <!-- ALERTE FISCALE -->
       <div class="sitrep-section full" style="background:rgba(249,115,22,.04);border-left:3px solid var(--orange)">
         <div class="sitrep-section-title"><span class="icon">💰</span>Alerte Fiscale CIV</div>
-        <div class="sitrep-text" id="sitrepFiscal" contenteditable="true">
-          <strong style="color:#ef4444">🔴 Alerte FMI — Ecofin Agency (30 mars 2026) :</strong>
-          CIV identifiée parmi <strong>12 pays en développement</strong> confrontés simultanément à la hausse des spreads souverains
-          et au service de la dette supérieur à la médiane 2026 <em>(blog FMI 30 mars · Abebe Aemro Selassie, Dir. Afrique FMI)</em>.
-          Prévisions BAD 6.5% basées sur Brent <strong>$68–69/bbl</strong> (WEO oct. 2025) — +58% au-dessus du niveau actuel.
-          Déficit courant projeté –2.3% PIB (BAD base) : s'élargit avec hausse facture pétrolière.
-          Dette publique : <strong>~57.3% PIB</strong> · Service dette/recettes : <strong>17.7%</strong>
-          (seuil critique FMI : 18%) · "La marge pour absorber les chocs est limitée" (Stratégie dette MFB 2025–2029).
-          <strong style="color:#f97316">WEO FMI 14 avr. 2026</strong> = 1er réexamen multilatéral officiel post-choc.
-          <br><br>
-          La CI absorbe le choc via le <strong>gel des prix à la pompe</strong> (mécanisme PMC suspendu).
-          Coût estimé du gel : <strong>~50 Mds FCFA/mois</strong> (Brent $109).
-          Recettes fiscales pétrole budgétisées : ~1.2% PIB = 711 Mds FCFA.
-          Double pression fiscale : (1) subvention implicite carburant + (2) chute recettes cacao (–57% bord champ).
-          Eurobond $1.75 Mds à 6.45% (mars 2025) · Programme FMI $4.8 Mds (2023–2026) — filets de sécurité préservés.
-          <strong>Jusqu'à quand le gel est-il tenable ?</strong> Si Brent > $120 durablement : révision prix à la pompe probable.
-        </div>
+        <div class="sitrep-text" id="sitrepFiscal" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(16,185,129,.5);padding-left:10px;background:rgba(16,185,129,.04);padding:8px 10px;border-radius:0 4px 4px 0" title="Cliquer pour éditer">
+        Brent ~$95/bbl — <strong style="color:#10b981">situation largement améliorée</strong>. Avec le Brent sous $100, le prix équitable estimé du super est ~$745 FCFA/L vs plafond officiel 820 FCFA/L → <strong style="color:#10b981">pas de subvention implicite</strong> (Scénario A). Le gel des prix est maintenant <strong>moins coûteux</strong> : l'État récupère même une marge positive (~75 FCFA/L) vs prix plafond.<br><br><strong style="color:#f59e0b">⚠ Mais prudence :</strong> EIA dit que la production ne reviendra pas aux niveaux pré-crise avant fin 2026. Les prix pourraient remonter si le cessez-le-feu échoue (négociations fragiles). Le ratio service dette/recettes (17.7% → seuil 18%) reste sous tension. Révision WEO FMI le 14 avr. intégrera le double choc pétrole + cacao.
+      </div>
       </div>
     </div>
     <div class="sitrep-footer">
@@ -614,8 +591,8 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
       </div>
       <div class="kpi-card amber">
         <div class="kpi-label">Subvention implicite est.</div>
-        <div class="kpi-value" id="kpiSubvention" style="font-size:17px;color:#f59e0b">~50<span class="kpi-unit"> Mds/mois</span></div>
-        <div class="kpi-badge warn">Estimation WB EEAM · Brent $109</div>
+        <div class="kpi-value" id="kpiSubvention" style="font-size:17px;color:#10b981">~0–15<span class="kpi-unit"> Mds/mois</span></div>
+        <div class="kpi-badge warn">Brent $95 post-cessez-le-feu · Scénario A</div>
       </div>
     </div>
   </div>
@@ -784,6 +761,19 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px">📋 Chronologie des événements clés</div>
     <div class="info-box">
       <table class="timeline-table">
+        <tr style="background:rgba(16,185,129,.1);border-left:3px solid #10b981">
+          <td class="tl-date" style="color:#10b981;font-weight:700">7–8 Avr 2026</td>
+          <td class="tl-actor" style="color:#10b981;font-weight:700">🕊️ Cessez-le-feu</td>
+          <td class="tl-event">
+            <span class="badge" style="background:rgba(16,185,129,.2);color:#10b981">✅ RUPTURE MAJEURE</span>
+            <strong>Cessez-le-feu 2 semaines USA–Iran</strong> (7 avr. 2026, 20h ET) : Trump suspend les frappes si l'Iran rouvre Hormuz. L'Iran accepte le passage "sous coordination" de ses forces armées. Deal négocié par le Pakistan (PM Shehbaz Sharif). Négociations à Islamabad le 10 avr.
+            <strong style="color:#10b981">Impact marché immédiat :</strong>
+            Brent –13% à ~$95/bbl · WTI –14% à ~$96/bbl — plus grande chute journalière depuis la Guerre du Golfe 1991.
+            S&amp;P 500 +0.1% · Dow –0.2%.
+            <strong style="color:#f59e0b">Prudence :</strong> EIA : restauration complète des flux = plusieurs mois. Production OPEC+ ne reviendra pas aux niveaux pré-crise avant fin 2026. Iran facture $2M/navire pour le transit.
+            <small>Bloomberg · NBC News · Axios · CBC · Al Jazeera · 7–8 avr. 2026.</small>
+          </td>
+        </tr>
         <tr style="background:rgba(239,68,68,.08)">
           <td class="tl-date" style="color:#ef4444;font-weight:700">5 Avr 2026</td>
           <td class="tl-actor">Marchés</td>
@@ -1414,7 +1404,7 @@ const ANSTAT_SEED = {
 };
 
 const SEED = {
-  brent: 109.03, wti: 111.54, transits: 5,
+  brent: 95.20, wti: 96.10, transits: 5,
   fao: 128.5, riz: 346, uree: 700,
   super_fcfa: 820, gasoil_fcfa: 675, lampant_fcfa: 705,
   gaz6: 2000, gaz12: 5200,
@@ -1530,7 +1520,7 @@ function renderCharts() {
     new Chart(document.getElementById('chartBrent'), {
       type: 'line',
       data: {
-        labels: ['Jan 26','Fév 26','28 Fév','5 Mar','12 Mar','19 Mar','26 Mar','31 Mar','5 Avr'],
+        labels: ['Jan 26','Fév 26','28 Fév','5 Mar','12 Mar','19 Mar','26 Mar','5 Avr','8 Avr (CEASEFIRE)'],
         datasets: [{
           label: 'Brent ($/bbl)',
           data: [73, 78, 68, 90, 112, 108, 105, 107.96, 109.03],
@@ -1843,7 +1833,7 @@ function updateCompositeScore(brent) {
 })();
 
 // Init simulator and score
-updateSimulator(SEED.brent || 109);
+updateSimulator(95);
 
 // ── ANStat CIV — API fetch attempt ───────────────────────────────
 // ANStat publishes monthly IHPC — try to fetch latest from their public API
