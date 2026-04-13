@@ -171,10 +171,10 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
 <div id="riskMatrix">
   <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-right:16px;flex-shrink:0">Matrice de Risque</div>
   <div class="risk-pill risk-red" id="riskEnergie" onclick="switchTab('energie')" title="Énergie">
-    <span class="risk-dot">●</span><span class="risk-label">Énergie</span><span class="risk-val" id="rvEnergie">$95/bbl</span>
+    <span class="risk-dot">●</span><span class="risk-label">Énergie</span><span class="risk-val" id="rvEnergie">$102/bbl</span>
   </div>
   <div class="risk-pill risk-red" id="riskFiscal" onclick="switchTab('fiscal')" title="Fiscalité">
-    <span class="risk-dot">●</span><span class="risk-label">Fiscal</span><span class="risk-val" id="rvFiscal">Scén. A</span>
+    <span class="risk-dot">●</span><span class="risk-label">Fiscal</span><span class="risk-val" id="rvFiscal">Scén. B</span>
   </div>
   <div class="risk-pill risk-red" id="riskCacao" onclick="switchTab('agriculture')" title="Cacao">
     <span class="risk-dot">●</span><span class="risk-label">Cacao</span><span class="risk-val" id="rvCacao">~$4 200/t</span>
@@ -240,7 +240,7 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
         <div style="font-size:10px;color:var(--text3)">/bbl · Brent</div>
       </div>
     </div>
-    <input type="range" id="brentSlider" min="60" max="150" value="95" step="1"
+    <input type="range" id="brentSlider" min="60" max="150" value="102" step="1"
       style="width:100%;accent-color:#f97316;height:6px;cursor:pointer"
       oninput="updateSimulator(this.value)">
     <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px">
@@ -424,7 +424,7 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
         </tr>
         <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
           <td style="padding:6px 4px;color:var(--text2)">Brent ($/bbl)</td>
-          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444" id="wl-brent" style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#2ec4b6">$95</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444" id="wl-brent" style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444">$102</td>
           <td style="padding:6px 4px;text-align:center;color:#ef4444">↑ +58%</td>
           <td style="padding:6px 4px;text-align:center;color:var(--text3)">$120</td>
         </tr>
@@ -486,15 +486,15 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
       <!-- MESURES GOUVERNEMENTALES -->
       <div class="sitrep-section full" style="background:rgba(16,185,129,.03)">
         <div class="sitrep-section-title"><span class="icon">🇨🇮</span>Mesures gouvernementales ivoiriennes</div>
-        <div class="sitrep-text" id="sitrepGouv" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(16,185,129,.5);padding-left:10px" title="Cliquer pour éditer">
-        <strong>Prix des carburants maintenus inchangés pour avril 2026</strong> (DGH/Min. Mines &amp; Pétrole, 31 mars 2026) : Super sans plomb <strong>820 FCFA/L</strong> · Gasoil <strong>675 FCFA/L</strong> · Pétrole lampant 705 FCFA/L. Gaz butane : 6 kg = 2 000 FCFA · 12,5 kg = 5 200 FCFA.<br><br><strong style="color:#10b981">🕊️ Impact cessez-le-feu (7 avr.) :</strong> Avec le Brent retombé à ~$95/bbl, le gel des prix à la pompe est maintenant <strong>moins coûteux</strong> et possiblement <strong>profitable</strong> pour le Trésor (marge ~75 FCFA/L vs prix équitable). Les décisions DGH de mai 2026 devront intégrer cette nouvelle réalité. <strong>Mais la restauration complète des flux Hormuz prendra des mois</strong> — EIA prévoit pas de retour aux niveaux pré-crise avant fin 2026.
+        <div class="sitrep-text" id="sitrepGouv" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(249,115,22,.5);padding-left:10px" title="Cliquer pour éditer">
+        <strong>Prix carburants maintenus pour avril 2026</strong> (DGH, 31 mars) : Super 820 FCFA/L · Gasoil 675 FCFA/L · Lampant 705 FCFA/L.<br><br><strong style="color:#ef4444">🔴 Retour de la pression (13 avr.) :</strong> Brent 102.29/bbl — rebond post-échec Islamabad. Le gel des prix à la pompe est à nouveau coûteux (~45 Mds FCFA/mois estimés). La décision DGH de mai 2026 sera cruciale : maintenir le gel (coût fiscal croissant) ou réviser les prix (impact social). <strong>Révision WEO FMI demain (14 avr.)</strong> — première évaluation officielle incluant la totalité de la crise Hormuz + blocus naval.
       </div>
       </div>
       <!-- PÉTROLE -->
       <div class="sitrep-section">
         <div class="sitrep-section-title"><span class="icon">⚡</span>Pétrole &amp; Géopolitique</div>
-        <div class="sitrep-text" id="sitrepPetrole" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(16,185,129,.6);padding-left:10px;background:rgba(16,185,129,.03)" title="Cliquer pour éditer">
-        <strong style="color:#10b981">✅ CESSEZ-LE-FEU 2 SEMAINES — 7 AVR. 2026</strong><br>Trump a suspendu les frappes contre l'Iran pour 2 semaines. L'Iran ouvre Hormuz "sous coordination" de ses forces armées. Deal négocié par le Pakistan.<br><br>Brent <strong style="color:#10b981">~$95/bbl</strong> (–13%) · WTI ~$96/bbl (–14%) — plus grande chute depuis la Guerre du Golfe 1991. Avant l'annonce : WTI $114, Brent plus élevé.<br><br><strong style="color:#f59e0b">⚠ Prudence :</strong> EIA avertit : production OPEC+ ne reviendra pas aux niveaux pré-crise avant fin 2026. "Nous n'avons jamais vu le détroit rouvrir. La restauration complète prendra des mois." — Tristan Abbey, EIA. Iran facture $2M/navire. Cessez-le-feu fragile · négociations à Islamabad 10 avr.
+        <div class="sitrep-text" id="sitrepPetrole" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(239,68,68,.5);padding-left:10px;background:rgba(239,68,68,.03)" title="Cliquer pour éditer">
+        <strong style="color:#ef4444">🔴 NOUVELLE ESCALADE — 13 Avril 2026 (Jour 43)</strong><br><strong>Les pourparlers d'Islamabad ont échoué le 12 avril.</strong> Vance a quitté le Pakistan sans accord. Point de blocage : l'Iran refusait "l'engagement affirmatif" de ne pas développer l'arme nucléaire. Trump a immédiatement annoncé un <strong style="color:#ef4444">blocus naval total du détroit de Hormuz</strong> — effectif lundi 13 avril à 10h ET. Le CENTCOM bloquera tous les navires entrant ou sortant des ports iraniens.<br><br>Brent <strong style="color:#ef4444">$102.29/bbl</strong> (+7%) · WTI <strong style="color:#ef4444">$104.2/bbl</strong> (+8%) — retour au-dessus de $100. <strong>Rappel chronologie :</strong> Cessez-le-feu 7 avr. → Brent $94.80 · Strait jamais vraiment rouvert (Iran limitait le trafic, $2M/navire) · 230 pétroliers toujours bloqués dans le Golfe · Goldman : Brent >$100 tout au long de 2026 si Hormuz reste fermé · Kpler : 5 mois pour restaurer la capacité. Arabie Saoudite : production réduite de 600k bpd + pipeline Est-Ouest touché.<br><br><strong style="color:#f4a261">⚠ Iran perdu la trace de ses mines</strong> — US Navy en opération de déminage. Le détroit est "en pause supervisée" (Windward).
       </div>
       </div>
       <!-- CACAO + ENGRAIS -->
@@ -512,8 +512,8 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
       <!-- ALERTE FISCALE -->
       <div class="sitrep-section full" style="background:rgba(249,115,22,.04);border-left:3px solid var(--orange)">
         <div class="sitrep-section-title"><span class="icon">💰</span>Alerte Fiscale CIV</div>
-        <div class="sitrep-text" id="sitrepFiscal" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(16,185,129,.5);padding-left:10px;background:rgba(16,185,129,.04);padding:8px 10px;border-radius:0 4px 4px 0" title="Cliquer pour éditer">
-        Brent ~$95/bbl — <strong style="color:#10b981">situation largement améliorée</strong>. Avec le Brent sous $100, le prix équitable estimé du super est ~$745 FCFA/L vs plafond officiel 820 FCFA/L → <strong style="color:#10b981">pas de subvention implicite</strong> (Scénario A). Le gel des prix est maintenant <strong>moins coûteux</strong> : l'État récupère même une marge positive (~75 FCFA/L) vs prix plafond.<br><br><strong style="color:#f59e0b">⚠ Mais prudence :</strong> EIA dit que la production ne reviendra pas aux niveaux pré-crise avant fin 2026. Les prix pourraient remonter si le cessez-le-feu échoue (négociations fragiles). Le ratio service dette/recettes (17.7% → seuil 18%) reste sous tension. Révision WEO FMI le 14 avr. intégrera le double choc pétrole + cacao.
+        <div class="sitrep-text" id="sitrepFiscal" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(249,115,22,.4);padding-left:10px;background:rgba(249,115,22,.04);padding:8px 10px;border-radius:0 4px 4px 0" title="Cliquer pour éditer">
+        Brent $102.29/bbl — retour en <strong style="color:#f59e0b">Scénario B</strong>. Le gel des prix à la pompe est à nouveau coûteux : subvention implicite estimée ~45 Mds FCFA/mois. Goldman : Brent >$100 tout au long de 2026 si Hormuz reste fermé. Kpler : 5 mois pour restaurer la capacité. Révision WEO FMI (14 avr. demain) sera la 1ère évaluation officielle post-blocus. Ratio service dette/recettes 17.7% → seuil 18% : marge zéro. <strong style="color:#ef4444">Double pression :</strong> blocus naval + cacao crisis non résolue.
       </div>
       </div>
     </div>
@@ -591,8 +591,8 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
       </div>
       <div class="kpi-card amber">
         <div class="kpi-label">Subvention implicite est.</div>
-        <div class="kpi-value" id="kpiSubvention" style="font-size:17px;color:#10b981">~0–15<span class="kpi-unit"> Mds/mois</span></div>
-        <div class="kpi-badge warn">Brent $95 post-cessez-le-feu · Scénario A</div>
+        <div class="kpi-value" id="kpiSubvention" style="font-size:17px;color:#f59e0b">~45<span class="kpi-unit"> Mds/mois</span></div>
+        <div class="kpi-badge warn">Brent $102 · Blocus naval · Scénario B</div>
       </div>
     </div>
   </div>
@@ -761,6 +761,30 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px">📋 Chronologie des événements clés</div>
     <div class="info-box">
       <table class="timeline-table">
+          <tr style="background:rgba(230,57,70,.12)">
+            <td class="tl-date" style="color:#ef4444;font-weight:700">13 Avr 2026</td>
+            <td class="tl-actor" style="color:#ef4444;font-weight:700">Trump · CENTCOM</td>
+            <td class="tl-event">
+              <span class="badge badge badge-red">🔴 BLOCUS NAVAL US</span>
+              <strong>Blocus naval total effectif 10h ET.</strong> CENTCOM bloque tous navires entrant/sortant des ports iraniens (Golfe + Golfe d'Oman). Brent +7% à $102.29/bbl · WTI +8% à $104.2/bbl. S&amp;P 500 sous pression. Iran : IRGC avertit de conséquences "dures et décisives". 230 pétroliers toujours bloqués dans le Golfe. Saudi Arabia : –600k bpd capacité + pipeline Est-Ouest touché. US Navy en opération de déminage (Iran a perdu trace de ses mines). Goldman : Brent >$100 tout 2026 si Hormuz reste fermé. Kpler : 5 mois pour restaurer capacité. <small>Source : CNBC / Axios / Bloomberg / Wikipedia, 12–13 avr. 2026.</small>
+            </td>
+          </tr>
+          <tr style="background:rgba(230,57,70,.08)">
+            <td class="tl-date" style="color:#f59e0b;font-weight:600">12 Avr 2026</td>
+            <td class="tl-actor">Vance / Iran</td>
+            <td class="tl-event">
+              <span class="badge badge badge-red">❌ ISLAMABAD FAILS</span>
+              Vance quitte le Pakistan sans accord. Point bloquant : Iran refusait engagement de non-prolifération nucléaire + demandait reparations guerre + contrôle détroit. Iranian FM Araghchi : "maximalisme, déplacement des lignes rouges." Peu après, Trump annonce blocus naval. WTI +8% · Brent +7%. <small>CNN / CNBC / Al Jazeera, 12 avr. 2026.</small>
+            </td>
+          </tr>
+          <tr>
+            <td class="tl-date">8–11 Avr 2026</td>
+            <td class="tl-actor">Marchés / Iran</td>
+            <td class="tl-event">
+              <span class="badge badge badge-amber">⚠ CESSEZ-LE-FEU FRAGILE</span>
+              Brent rebondit de $94 → $97 car Iran limitait le trafic malgré le cessez-le-feu ($2M/navire, "pause supervisée"). 230 pétroliers immobilisés dans le Golfe (ADNOC). Saudi production –600k bpd. Ras Laffan LNG (Qatar) : –17% capacité. Vance arrive à Islamabad (11 avr.) pour négociations directes. Iran perdu trace de ses mines — US Navy entame opération déminage. <small>CNBC / Bloomberg / Wikipedia, 8–11 avr. 2026.</small>
+            </td>
+          </tr>
         <tr style="background:rgba(16,185,129,.1);border-left:3px solid #10b981">
           <td class="tl-date" style="color:#10b981;font-weight:700">7–8 Avr 2026</td>
           <td class="tl-actor" style="color:#10b981;font-weight:700">🕊️ Cessez-le-feu</td>
@@ -1404,7 +1428,7 @@ const ANSTAT_SEED = {
 };
 
 const SEED = {
-  brent: 95.20, wti: 96.10, transits: 5,
+  brent: 102.29, wti: 104.2, transits: 5,
   fao: 128.5, riz: 346, uree: 700,
   super_fcfa: 820, gasoil_fcfa: 675, lampant_fcfa: 705,
   gaz6: 2000, gaz12: 5200,
@@ -1833,7 +1857,7 @@ function updateCompositeScore(brent) {
 })();
 
 // Init simulator and score
-updateSimulator(95);
+updateSimulator(102);
 
 // ── ANStat CIV — API fetch attempt ───────────────────────────────
 // ANStat publishes monthly IHPC — try to fetch latest from their public API
