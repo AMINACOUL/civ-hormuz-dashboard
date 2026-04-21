@@ -214,7 +214,7 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
     <div>
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text3)">Score de vulnérabilité composite — CIV</div>
       <div style="display:flex;align-items:baseline;gap:10px;margin-top:4px">
-        <span id="scoreComposite" style="font-size:48px;font-weight:900;font-family:var(--mono);color:#f97316">67</span>
+        <span id="scoreComposite" style="font-size:48px;font-weight:900;font-family:var(--mono);color:#ef4444">58</span>
         <span style="font-size:13px;color:var(--text3)">/100</span>
         <span id="ceasefireBadge" style="background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3);padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700">🕊️ CESSEZ-LE-FEU 2 SEMAINES</span>
         <span id="scoreBadge" style="background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3);padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700">🟡 VIGILANCE ÉLEVÉE</span>
@@ -223,7 +223,7 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
     </div>
     <div style="margin-left:auto;text-align:right">
       <div style="font-size:10px;color:var(--text3);margin-bottom:6px">Révision WEO FMI</div>
-      <div style="font-size:22px;font-weight:700;color:#ef4444;font-family:var(--mono)" id="weoCountdown">—</div>
+      <div style="font-size:22px;font-weight:700;color:#ef4444;font-family:var(--mono)" id="weoCountdown" style="font-size:22px;font-weight:700;color:#10b981;font-family:var(--mono)">PUBLIÉ</div>
       <div style="font-size:10px;color:var(--text3)">14 avr. 2026 · 1ʳᵉ révision post-choc</div>
     </div>
   </div>
@@ -240,7 +240,7 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
         <div style="font-size:10px;color:var(--text3)">/bbl · Brent</div>
       </div>
     </div>
-    <input type="range" id="brentSlider" min="60" max="150" value="102" step="1"
+    <input type="range" id="brentSlider" min="60" max="150" value="90" step="1"
       style="width:100%;accent-color:#f97316;height:6px;cursor:pointer"
       oninput="updateSimulator(this.value)">
     <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px">
@@ -424,7 +424,7 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
         </tr>
         <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
           <td style="padding:6px 4px;color:var(--text2)">Brent ($/bbl)</td>
-          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444" id="wl-brent" style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444">$102</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444" id="wl-brent" style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444">$95.48</td>
           <td style="padding:6px 4px;text-align:center;color:#ef4444">↑ +58%</td>
           <td style="padding:6px 4px;text-align:center;color:var(--text3)">$120</td>
         </tr>
@@ -451,6 +451,18 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
           <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#f59e0b">128.5</td>
           <td style="padding:6px 4px;text-align:center;color:#f59e0b">↑ +2.4%</td>
           <td style="padding:6px 4px;text-align:center;color:var(--text3)">132</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.04);background:rgba(239,68,68,.04)">
+          <td style="padding:6px 4px;color:var(--text2)">Broyage Europe T1 2026 (ECA)</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444">–7.8%</td>
+          <td style="padding:6px 4px;text-align:center;color:#ef4444">↓ Pire T1 depuis 2009</td>
+          <td style="padding:6px 4px;text-align:center;color:#595959">–3% attendu</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+          <td style="padding:6px 4px;color:var(--text2)">Croissance mondiale (FMI WEO)</td>
+          <td style="padding:6px 4px;text-align:center;font-family:var(--mono);color:#ef4444">3.1%</td>
+          <td style="padding:6px 4px;text-align:center;color:#ef4444">↓ –0.2pp</td>
+          <td style="padding:6px 4px;text-align:center;color:#f59e0b">3.4% (prev)</td>
         </tr>
         <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
           <td style="padding:6px 4px;color:var(--text2)">IHPC CIV (ANStat)</td>
@@ -490,7 +502,7 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
     <div class="sitrep-hdr">
       <div class="sitrep-hdr-left">
         <span class="sitrep-badge">🚨 RAPPORT DE SITUATION</span>
-        <span id="sitrepDayBadge" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.25);font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px">Jour 36 · 5 Avr 2026</span>
+        <span id="sitrepDayBadge" style="background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:.05em">Jour 51 · 21 Avr 2026 · CESSEZ-LE-FEU EXPIRE AUJOURD'HUI</span>
       </div>
       <span style="font-size:10px;color:var(--text3);font-style:italic">✎ Cliquer pour éditer · sauvegarde auto</span>
     </div>
@@ -505,22 +517,56 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
       <!-- PÉTROLE -->
       <div class="sitrep-section">
         <div class="sitrep-section-title"><span class="icon">⚡</span>Pétrole &amp; Géopolitique</div>
-        <div class="sitrep-text" id="sitrepPetrole" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(239,68,68,.5);padding-left:10px;background:rgba(239,68,68,.03)" title="Cliquer pour éditer">
-        <strong style="color:#ef4444">🔴 NOUVELLE ESCALADE — 13 Avril 2026 (Jour 43)</strong><br><strong>Les pourparlers d'Islamabad ont échoué le 12 avril.</strong> Vance a quitté le Pakistan sans accord. Point de blocage : l'Iran refusait "l'engagement affirmatif" de ne pas développer l'arme nucléaire. Trump a immédiatement annoncé un <strong style="color:#ef4444">blocus naval total du détroit de Hormuz</strong> — effectif lundi 13 avril à 10h ET. Le CENTCOM bloquera tous les navires entrant ou sortant des ports iraniens.<br><br>Brent <strong style="color:#ef4444">$102.29/bbl</strong> (+7%) · WTI <strong style="color:#ef4444">$104.2/bbl</strong> (+8%) — retour au-dessus de $100. <strong>Rappel chronologie :</strong> Cessez-le-feu 7 avr. → Brent $94.80 · Strait jamais vraiment rouvert (Iran limitait le trafic, $2M/navire) · 230 pétroliers toujours bloqués dans le Golfe · Goldman : Brent >$100 tout au long de 2026 si Hormuz reste fermé · Kpler : 5 mois pour restaurer la capacité. Arabie Saoudite : production réduite de 600k bpd + pipeline Est-Ouest touché.<br><br><strong style="color:#f4a261">⚠ Iran perdu la trace de ses mines</strong> — US Navy en opération de déminage. Le détroit est "en pause supervisée" (Windward).
+        <div class="sitrep-text" id="sitrepPetrole" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(239,68,68,.6);padding-left:10px;background:rgba(239,68,68,.03)" title="Cliquer pour éditer">
+        
+          <strong style="color:#ef4444">🔴 21 AVRIL 2026 — Jour 51 : Cessez-le-feu EXPIRE AUJOURD'HUI</strong><br>
+          Brent <strong style="color:#ef4444">$95.48/bbl (+5,6%)</strong> · WTI $89.61/bbl (+6,8%) — rebond lun. 20 avr. après re-escalade du week-end.<br><br>
+          <strong>Week-end critique (19–20 avr.) :</strong><br>
+          · Sam 19 : Canonnières IRGC tirent sur pétrolier dans Hormuz. CMA CGM touché par projectile inconnu. Iran referme le détroit.<br>
+          · Dim 19 : US Navy tire et <strong>saisit navire iranien</strong> dans golfe d'Oman. Trump : "violation totale." Menace bombes centrales/ponts.<br>
+          · Lun 20 : Seulement 3 navires ont traversé Hormuz toute la journée. Iran FM : "pas de plan pour Round 2." Trump : "très improbable" d'étendre le cessez-le-feu.<br>
+          · ING : ~13 mb/j encore perturbés. Perte cumulée >500 millions de barils.<br><br>
+          <strong style="color:#ef4444">⚠️ CESSEZ-LE-FEU EXPIRE AUJOURD'HUI (mercredi, heure ET).</strong>
+          Si accord → Brent recul vers $83 (Goldman). Si pas d'accord → reprise des frappes → Brent spike attendu.
+          Pakistan FM : toujours "80%+ complété" — mais Iran FM : "pas de négociations prévues."
+          Impact CIV : Brent $95 → subvention implicite ~25 Mds FCFA/mois. Si Brent remonte $110 → ~35 Mds.
+          
       </div>
       </div>
       <!-- CACAO + ENGRAIS -->
       <div class="sitrep-section">
         <div class="sitrep-section-title"><span class="icon">🌱</span>Agriculture, Cacao &amp; Engrais</div>
-        <div class="sitrep-text" id="sitrepCacao" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(16,185,129,.5);padding-left:10px" title="Cliquer pour éditer">
-        <strong style="color:#10b981">✅ FIN DE LA CRISE DE DÉSTOCKAGE — 8–9 Avr. 2026</strong><br>Le CCC a notifié à l'OIA-Café-Cacao un quota complémentaire de <strong>23 830 tonnes</strong> (8 avr.) — marquant la <strong>clôture officielle</strong> de l'opération de déstockage. Le stock résiduel de <strong>~102 000 tonnes</strong> réparti dans 1 430 coopératives est désormais écoulé. L'État a mobilisé :<br>• <strong>291 Mds FCFA</strong> pour l'enlèvement du stock résiduel<br>• <strong>231 Mds FCFA</strong> pour soutenir la fixation du prix bord champ à 1 200 FCFA/kg<br>Min. Bruno Nabagné Koné (9 avr., Caistab-Plateau) : "les perturbations observées ne sont pas spécifiques à la CIV — tous les pays producteurs ont été confrontés à des difficultés similaires."<br><br><strong>Campagne intermédiaire 2025-2026 :</strong> Prix bord champ fixé à <strong>1 200 FCFA/kg</strong> (–57% vs 2 800 FCFA campagne principale). Campagne intermédiaire : mars–août 2026. <strong>Sensibilisation acheteurs/pisteurs (Kani, 10 avr. 2026 · AIP) :</strong> Le directeur régional CCC de Daloa avertit que le non-respect du prix 1 200 FCFA expose à des <strong>poursuites judiciaires, amendes et peines d'emprisonnement.</strong> <strong>Réforme traçabilité :</strong> à partir de <strong>septembre 2026</strong>, toutes les transactions via la carte du producteur obligatoire. "Aucun cacao ne sera acheté en manipulant des espèces" — DG CCC Koné Brahima Yves.<br><br><strong>Conditions favorables :</strong> Pluies supérieures à la moyenne dans les principales régions productrices → attentes d'une récolte intermédiaire plus longue et plus forte. Stocks ICE : record <strong>8,25 mois</strong> (2 362 668 sacs au 31 mars 2026). Prix mondial cacao : <strong>~$3 100/t</strong> — bas depuis mai 2023. <strong>Données broyage T1 (Europe + Amérique du Nord) attendues le 16 avr.</strong> → indicateur clé de la demande mondiale.<br><br><strong style="color:#f59e0b">⚠ Impact Hormuz sur la filière :</strong> Hausse des coûts de fret et assurance → majoration des coûts logistiques vers les marchés européens. La crise ne réduit pas la récolte, mais augmente les coûts à l'export. La disruption des engrais (urée +46% MoM) menace les rendements H2 2026.
+        <div class="sitrep-text" id="sitrepCacao" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(46,196,182,.4);padding-left:10px" title="Cliquer pour éditer">
+        
+          <strong>🌍 Données broyage T1 2026 (publiées 16 avr. 2026) :</strong><br>
+          <strong style="color:#ef4444">Europe : 325 852 MT (–7,8% /an)</strong>
+          — plus bas T1 depuis 2009 (17 ans), pire que les attentes (–3% à –7%).
+          Signal clair : demande faible liée aux prix élevés 2024.<br>
+          <strong style="color:#10b981">Malaisie : 91 946 MT (+8,7% /an)</strong>
+          — forte hausse ; Asie reste structurellement solide.<br>
+          Stocks ICE : record de <strong>19,5 mois</strong> (2 540 983 sacs au 10 avr.) → 2 610 453 sacs au 13 avr.
+          Pression baissière sur les prix maintenue.<br><br>
+          <strong>Campagne intermédiaire CIV (mars–août 2026) :</strong>
+          Arrivées ports CIV +0,7% /an → 1,462 MT au 12 avr. (depuis 1er oct.).
+          Météo favorable : pluies supérieures à la moyenne — bonne récolte attendue mai–juillet.
+          Producteurs : "bonne campagne intermédiaire" concentrée mai-juillet, mais davantage de pluies nécessaires.
+          Prix bord champ campagne intermédiaire : <strong>1 200 FCFA/kg</strong> (–57% vs 2 800 campagne principale).
+          
       </div>
       </div>
       <!-- ALERTE FISCALE -->
       <div class="sitrep-section full" style="background:rgba(249,115,22,.04);border-left:3px solid var(--orange)">
         <div class="sitrep-section-title"><span class="icon">💰</span>Alerte Fiscale CIV</div>
-        <div class="sitrep-text" id="sitrepFiscal" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(249,115,22,.4);padding-left:10px;background:rgba(249,115,22,.04);padding:8px 10px;border-radius:0 4px 4px 0" title="Cliquer pour éditer">
-        Brent $102.29/bbl — retour en <strong style="color:#f59e0b">Scénario B</strong>. Le gel des prix à la pompe est à nouveau coûteux : subvention implicite estimée ~45 Mds FCFA/mois. Goldman : Brent >$100 tout au long de 2026 si Hormuz reste fermé. Kpler : 5 mois pour restaurer la capacité. Révision WEO FMI (14 avr. demain) sera la 1ère évaluation officielle post-blocus. Ratio service dette/recettes 17.7% → seuil 18% : marge zéro. <strong style="color:#ef4444">Double pression :</strong> blocus naval + cacao crisis non résolue.
+        <div class="sitrep-text" id="sitrepFiscal" contenteditable="true" spellcheck="false" class="sitrep-section-text" style="font-size:12px;color:var(--text);line-height:1.65;outline:none;cursor:text;border-left:2px solid rgba(239,68,68,.4);padding-left:10px;padding:8px 10px;border-radius:0 4px 4px 0" title="Cliquer pour éditer">
+        
+          Brent <strong style="color:#ef4444">$95.48/bbl</strong> — incertitude maximale (expiration cessez-le-feu).
+          Subvention implicite CIV ~25 Mds FCFA/mois à $95 (allégée vs ~45 Mds à $102).
+          Si Brent remonte vers $110 (reprise conflit) : ~35 Mds FCFA/mois.
+          Service dette/recettes 17,7% → seuil critique FMI 18% : marge 0,3pp — surveiller.<br><br>
+          <strong>DGH mai 2026 :</strong> décision maintien/révision prix pompe (super 820, gasoil 675 FCFA/L) à surveiller.
+          Broyage cacao T1 Europe : –7,8% — signal demande faible → risque recettes export CIV.
+          <strong>Date clé :</strong> Issue cessez-le-feu aujourd'hui → orientera volatilité prix semaine prochaine.
+          
       </div>
       </div>
     </div>
@@ -598,8 +644,8 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
       </div>
       <div class="kpi-card amber">
         <div class="kpi-label">Subvention implicite est.</div>
-        <div class="kpi-value" id="kpiSubvention" style="font-size:17px;color:#f59e0b">~45<span class="kpi-unit"> Mds/mois</span></div>
-        <div class="kpi-badge warn">Brent $102 · Blocus naval · Scénario B</div>
+        <div class="kpi-value" id="kpiSubvention" style="font-size:17px;color:#f59e0b">~30<span class="kpi-unit"> Mds/mois</span></div>
+        <div class="kpi-badge warn">Brent $94.79 · 2nd talks pending · Scénario A/B</div>
       </div>
     </div>
   </div>
@@ -768,7 +814,24 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
     <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px">📋 Chronologie des événements clés</div>
     <div class="info-box">
       <table class="timeline-table">
-          <tr style="background:rgba(230,57,70,.12)">
+                  <tr style="background:rgba(245,158,11,.08)">
+          <td class="tl-date" style="color:#f59e0b;font-weight:700">15 Avr 2026<br><small>AUJOURD'HUI</small></td>
+          <td class="tl-actor">Trump / Iran</td>
+          <td class="tl-event">
+            <span class="badge badge-amber">🕊️ 2ÈME ROUND TALKS</span>
+            Trump: négociations pourraient reprendre "dans les 2 prochains jours" à Islamabad. Téhéran envisage un arrêt temporaire des expéditions via Hormuz pour faciliter un accord. <strong>Brent $94.79 (–4,6%) · WTI $91.28 (–7,87%)</strong> — plus forte baisse depuis l'annonce du cessez-le-feu. Cessez-le-feu expire le <strong>22 avril</strong>. Goldman: contrats Brent fin-2026 impliquent ~$83/bbl si résolution.
+          </td>
+        </tr>
+        <tr style="background:rgba(239,68,68,.07)">
+          <td class="tl-date" style="color:#ef4444">14 Avr 2026</td>
+          <td class="tl-actor">IEA · FMI WEO</td>
+          <td class="tl-event">
+            <span class="badge badge-red">🔴 IEA + FMI ALERTES</span>
+            <strong>IEA OMR Avril:</strong> Production mondiale –10,1 mb/j en mars — <strong>plus grande perturbation de l'histoire</strong>. Demande mondiale 2026 : désormais –80 000 bpj (était +640 000 prévu) — 1ère baisse annuelle depuis la pandémie. Raffineries ME + Asie réduisent productions de ~6 mb/j en avril.
+            <strong>FMI WEO Printemps:</strong> Croissance mondiale 2026 : <strong>3,1%</strong> (–0,2pp; était prévu à 3,4%). Inflation : <strong>4,4%</strong>. Scénario adverse : croissance 2,5%, inflation 5,4%. Scénario sévère : croissance ~2% — "limite d'une récession mondiale" (Gourinchas). IEA Birol : "les prix actuels ne reflètent pas la gravité de la menace." <small>IEA OMR avr. 2026 · FMI WEO Printemps 2026.</small>
+          </td>
+        </tr>
+<tr style="background:rgba(230,57,70,.12)">
             <td class="tl-date" style="color:#ef4444;font-weight:700">13 Avr 2026</td>
             <td class="tl-actor" style="color:#ef4444;font-weight:700">Trump · CENTCOM</td>
             <td class="tl-event">
@@ -776,6 +839,65 @@ body{background:var(--bg0);color:var(--text);font-family:var(--font);font-size:1
               <strong>Blocus naval total effectif 10h ET.</strong> CENTCOM bloque tous navires entrant/sortant des ports iraniens (Golfe + Golfe d'Oman). Brent +7% à $102.29/bbl · WTI +8% à $104.2/bbl. S&amp;P 500 sous pression. Iran : IRGC avertit de conséquences "dures et décisives". 230 pétroliers toujours bloqués dans le Golfe. Saudi Arabia : –600k bpd capacité + pipeline Est-Ouest touché. US Navy en opération de déminage (Iran a perdu trace de ses mines). Goldman : Brent >$100 tout 2026 si Hormuz reste fermé. Kpler : 5 mois pour restaurer capacité. <small>Source : CNBC / Axios / Bloomberg / Wikipedia, 12–13 avr. 2026.</small>
             </td>
           </tr>
+        <tr style="background:rgba(59,130,246,.07)">
+          <td class="tl-date" style="color:#3b9ef0;font-weight:600">16 Avr 2026</td>
+          <td class="tl-actor" style="color:#3b9ef0">Trump</td>
+          <td class="tl-event">
+            <span class="badge" style="background:rgba(59,130,246,.2);color:#3b9ef0;font-size:9px;padding:2px 5px;border-radius:3px">🕊️ CESSEZ-LE-FEU LIBAN</span>
+            Trump annonce cessez-le-feu 10 jours Israël-Liban (17 avr. 17h ET). Brent intraday $99.39 (+5%) — rebond sur peur Hormuz fermé. Trump : guerre Iran "devrait se terminer bientôt."
+          </td>
+        </tr>
+        <tr style="background:rgba(16,185,129,.12)">
+          <td class="tl-date" style="color:#10b981;font-weight:700">17 Avr 2026<br><small style="color:#10b981;font-size:9px">✅ PERCÉE</small></td>
+          <td class="tl-actor" style="color:#10b981">Iran FM / Marchés</td>
+          <td class="tl-event">
+            <span class="badge" style="background:rgba(16,185,129,.25);color:#10b981;font-size:9px;padding:2px 5px;border-radius:3px">🟢 HORMUZ "COMPLÈTEMENT OUVERT"</span>
+            FM Araghchi : Hormuz <strong>"complètement ouvert"</strong> pour navires commerciaux pendant cessez-le-feu. Accès via route IRGC coordonnée.
+            Trump : blocus naval US <strong>"reste en vigueur"</strong> jusqu'à accord de paix.
+            <strong>Brent –9,0% → $90.38 · WTI –11,4% → $83.85</strong>.
+            S&amp;P 500 record historique (7 100+). Pakistan FM : accord "80%+ complété."
+            Sommet Paris 40+ pays (Macron-Starmer Initiative Hormuz ; US absent).
+            <strong>Cessez-le-feu expire 22 avril.</strong> <small>CNBC/CNN · 17 avr. 2026.</small>
+          </td>
+        </tr>
+        <tr style="background:rgba(16,185,129,.06)">
+          <td class="tl-date" style="color:#10b981;font-weight:700">18 Avr 2026<br><small style="color:#10b981;font-size:9px">AUJOURD'HUI</small></td>
+          <td class="tl-actor" style="color:#10b981">Diplomatie</td>
+          <td class="tl-event">
+            <span class="badge" style="background:rgba(16,185,129,.2);color:#10b981;font-size:9px;padding:2px 5px;border-radius:3px">🕊️ WEEK-END DIPLOMATIQUE</span>
+            Négociations US-Iran continuent (canal Pakistan/Islamabad).
+            Brent ~$90.38 (clôture vendredi). Flux Hormuz encore très limités — navires nécessitent autorisation IRGC préalable. Kpler : bateaux ont tenté de passer mais ont rebroussé chemin.
+            <strong>Date clé : 22 avril — expiration cessez-le-feu.</strong>
+            Pour CIV : Brent $90 → subvention implicite ~25 Mds FCFA/mois (allégée vs $102).
+            DGH mai 2026 : décision maintien/révision prix pompe.
+          </td>
+        </tr>
+        <tr style="background:rgba(239,68,68,.10)">
+          <td class="tl-date" style="color:#ef4444;font-weight:600">19–20 Avr 2026</td>
+          <td class="tl-actor" style="color:#ef4444">IRGC / US Navy</td>
+          <td class="tl-event">
+            <span class="badge" style="background:rgba(239,68,68,.2);color:#ef4444;font-size:9px;padding:2px 5px;border-radius:3px">🔴 RE-ESCALADE</span>
+            Sam 19 : IRGC tire sur pétrolier dans Hormuz. CMA CGM touché.
+            Iran referme le détroit — navires rebroussent chemin.
+            Dim 19 : US Navy <strong>saisit navire iranien</strong> en golfe d'Oman.
+            Trump : "violation totale." Menace reprendre frappes.
+            Lun 20 : seulement 3 navires traversent Hormuz. Iran FM : "pas de Round 2."
+            <strong>Brent +5,6% → $95.48</strong> · WTI +6,8% → $89.61.
+            <small>WashPost / CNBC · 19–20 avr. 2026.</small>
+          </td>
+        </tr>
+        <tr style="background:rgba(239,68,68,.15)">
+          <td class="tl-date" style="color:#ef4444;font-weight:700">21 Avr 2026<br><small style="color:#ef4444;font-size:9px">AUJOURD'HUI</small></td>
+          <td class="tl-actor" style="color:#ef4444">Expiration CdF</td>
+          <td class="tl-event">
+            <span class="badge" style="background:rgba(239,68,68,.3);color:#ef4444;font-size:9px;padding:2px 5px;border-radius:3px">⚠️ CESSEZ-LE-FEU EXPIRE</span>
+            <strong>Le cessez-le-feu US-Iran expire aujourd'hui.</strong>
+            Résultat inconnu. Iran n'a pas confirmé Round 2.
+            Trump : "pas d'extension sans accord." Si reprise → spike Brent probable.
+            Goldman : Brent $83 fin 2026 si accord · >$100 si Hormuz reste fermé.
+            Impact CIV : subvention implicite ~25–35 Mds FCFA/mois selon scénario.
+          </td>
+        </tr>
           <tr style="background:rgba(230,57,70,.08)">
             <td class="tl-date" style="color:#f59e0b;font-weight:600">12 Avr 2026</td>
             <td class="tl-actor">Vance / Iran</td>
@@ -1459,7 +1581,7 @@ const ANSTAT_SEED = {
 };
 
 const SEED = {
-  brent: 102.29, wti: 104.2, transits: 5,
+  brent: 95.48, wti: 89.61, transits: 5,
   fao: 128.5, riz: 346, uree: 700,
   super_fcfa: 820, gasoil_fcfa: 675, lampant_fcfa: 705,
   gaz6: 2000, gaz12: 5200,
@@ -1888,7 +2010,7 @@ function updateCompositeScore(brent) {
 })();
 
 // Init simulator and score
-updateSimulator(102);
+updateSimulator(94);
 
 // ── ANStat CIV — API fetch attempt ───────────────────────────────
 // ANStat publishes monthly IHPC — try to fetch latest from their public API
